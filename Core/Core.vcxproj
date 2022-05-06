@@ -131,6 +131,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -140,15 +141,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ButtonEx.h" />
     <ClInclude Include="ButtonPage.h" />
+    <ClInclude Include="ControlBase.h" />
+    <ClInclude Include="ControlExample.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="PageBase.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="WindowStyleDetail.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ButtonEx.cpp" />
     <ClCompile Include="ButtonPage.cpp" />
+    <ClCompile Include="ControlBase.cpp" />
+    <ClCompile Include="ControlExample.cpp" />
     <ClCompile Include="Core.cpp" />
+    <ClCompile Include="PageBase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Core.rc" />

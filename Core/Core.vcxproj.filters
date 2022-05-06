@@ -16,6 +16,9 @@
     <Filter Include="Pages">
       <UniqueIdentifier>{bf83e4e9-55ff-4ad3-bcee-1c8eca154024}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Controls">
+      <UniqueIdentifier>{7e268212-db96-45bf-8315-1c4e96bfd096}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -33,6 +36,21 @@
     <ClInclude Include="ButtonPage.h">
       <Filter>Pages</Filter>
     </ClInclude>
+    <ClInclude Include="ControlExample.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PageBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ControlBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonEx.h">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowStyleDetail.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core.cpp">
@@ -40,6 +58,18 @@
     </ClCompile>
     <ClCompile Include="ButtonPage.cpp">
       <Filter>Pages</Filter>
+    </ClCompile>
+    <ClCompile Include="ControlExample.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PageBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ControlBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonEx.cpp">
+      <Filter>Controls</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

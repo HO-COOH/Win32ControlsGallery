@@ -1,22 +1,29 @@
 // Core.cpp : Defines the entry point for the application.
 //
-
+#include "pch.h"
 #include "framework.h"
 #include "Core.h"
-#include <windowsx.h>
+
 #include <cassert>
 #include <iostream>
 #include <sstream>
 #include <future>
 #include <dwmapi.h>
+#include <Uxtheme.h>
+#include <array>
+#include <future>
+#include "SplashScreen.h"
+
+
 
 #pragma comment(lib, "dwmapi.lib")
+#pragma comment(lib, "UxTheme.lib")
 
 #pragma comment(linker,"\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
-static HINSTANCE gHinst;
+HINSTANCE gHinst;
 static HWND gHwnd;
 static HWND gCreatedWindow;
 static int gNCmdShow;
@@ -46,20 +53,30 @@ LRESULT CALLBACK WndProc2(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             FillRect(hdc, &ps.rcPaint, redBrush);
 
             EndPaint(hWnd, &ps);
-            break;
+            return {};
         }
+        //case WM_NCPAINT:
+        //{
+        //    HDC hdc;
+        //    hdc = GetDCEx(hWnd, (HRGN)wParam, DCX_WINDOW | DCX_INTERSECTRGN);
+        //    
+        //    RECT rect{ .left = 0, .top = 0, .right = 1000, .bottom = 1000 };
+        //    auto redBrush = CreateSolidBrush(RGB(255, 0, 0));
+			
+
+        //    FillRect(hdc, &rect, redBrush);
+        //    // Paint into this DC 
+        //    ReleaseDC(hWnd, hdc);
+        //    return 0;
+        //}
         default:
             return DefWindowProc(hWnd, message, wParam, lParam);
     }
 }
 
+
 namespace Controls
 {
-    //
-    //  FUNCTION: MyRegisterClass()
-    //
-    //  PURPOSE: Registers the window class.
-    //
     static ATOM MyRegisterClass(HINSTANCE hInstance)
     {
         WNDCLASSEXW wcex;
@@ -84,16 +101,34 @@ namespace Controls
     {
 
         gHwnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-            CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, gHinst, nullptr);
+            500, 500, 2000, 1000, nullptr, nullptr, gHinst, nullptr);
+		
 
         if (!gHwnd)
         {
             return FALSE;
         }
 
-        ShowWindow(gHwnd, nCmdShow);
-        UpdateWindow(gHwnd);
+        std::shared_ptr<SplashScreen> splashScreen;
+        if (RECT mainWindowRect{}; GetWindowRect(gHwnd, &mainWindowRect))
+        {
+            splashScreen = std::make_shared<SplashScreen>(mainWindowRect.left + 9, mainWindowRect.top, mainWindowRect.right - mainWindowRect.left - 18, mainWindowRect.bottom - mainWindowRect.top - 9, 500);
+        }
+        else
+        {
+            splashScreen = std::make_shared<SplashScreen>(CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, 500);
+        }
 
+        splashScreen->setImage(Graphics::Bitmap{
+            /*Graphics::Image{L"splash.png", Graphics::Image::Type::Bitmap, 200,200,LR_LOADFROMFILE}*/
+			L"splash.png"
+        });
+        splashScreen->onFinish([] {
+            ShowWindow(gHwnd, SW_SHOWNOACTIVATE);
+        });
+
+        splashScreen->show();
+        UpdateWindow(gHwnd);
         return TRUE;
     }
 	
@@ -104,7 +139,6 @@ namespace Controls
         LoadStringW(gHinst, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
         LoadStringW(gHinst, IDC_CORE, szWindowClass, MAX_LOADSTRING);
         MyRegisterClass(gHinst);
-
         // Perform application initialization:
         if (!InitInstance(gNCmdShow))
         {
@@ -131,464 +165,15 @@ namespace Controls
         InitControls();
     }
 
-    DWORD StringLength(LPCSTR str)
-    {
-        return static_cast<DWORD>(strlen(str));
-    }
 
-    DWORD StringLength(LPCWSTR str)
-    {
-        return static_cast<DWORD>(wcslen(str));
-    }
 
-    RECT GetClientRect(HWND hwnd)
-    {
-        RECT rc{};
-		GetClientRect(hwnd, &rc);
-		return rc;
-    }
 
-    Tab::Tab(HWND parent)
-    {
-        auto const rcClient = GetClientRect(parent);
-        m_hwnd = CreateWindow(
-			ClassName,
-			L"",
-			WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE,
-			0, 0, rcClient.right, rcClient.bottom,
-			parent,
-			nullptr,
-			gHinst,
-			nullptr);
-        
-    }
+    
+    
 
-    void Tab::addTab(TCITEM const& item)
-    {
-		TabCtrl_InsertItem(m_hwnd, 0, &item);
-    }
 
-    void Tab::addTab(LPCTSTR text)
-    {
-        TCITEM item
-        {
-			.mask = TCIF_TEXT,
-            .pszText = const_cast<LPTSTR>(text),
-			.cchTextMax = static_cast<int>(StringLength(text))
-        };
-        addTab(item);
-    }
 
-    void Tab::adjustRect(BOOL larger, RECT& rect)
-    {
-		TabCtrl_AdjustRect(m_hwnd, larger, &rect);
-    }
 
-    void Tab::deleteAllItems()
-    {
-        TabCtrl_DeleteAllItems(m_hwnd);
-    }
-
-    void Tab::deleteItem(int i)
-    {
-        TabCtrl_DeleteItem(m_hwnd, i);
-    }
-
-    void Tab::deselectAll(UINT excludeFocus)
-    {
-        TabCtrl_DeselectAll(m_hwnd, excludeFocus);
-    }
-
-    int Tab::getCurFocus()
-    {
-        return TabCtrl_GetCurFocus(m_hwnd);
-    }
-
-    int Tab::getCurSel() const
-    {
-        return TabCtrl_GetCurSel(m_hwnd);
-    }
-    DWORD Tab::getExtendedStyle()
-    {
-        return TabCtrl_GetExtendedStyle(m_hwnd);
-    }
-    HIMAGELIST Tab::getImageList()
-    {
-        return TabCtrl_GetImageList(m_hwnd);
-    }
-    TCITEM Tab::getItem(int iItem, UINT mask)
-    {
-        TCITEM item
-        {
-            .mask = mask
-        };
-		TabCtrl_GetItem(m_hwnd, iItem, &item);
-        return item;
-    }
-    int Tab::getItemCount()
-    {
-        return TabCtrl_GetItemCount(m_hwnd);
-    }
-    RECT Tab::getItemRect(int i)
-    {
-        RECT rc{};
-		TabCtrl_GetItemRect(m_hwnd, i, &rc);
-		return rc;
-    }
-    int Tab::getRowCount()
-    {
-        return TabCtrl_GetRowCount(m_hwnd);
-    }
-    HWND Tab::getToolTips()
-    {
-        return TabCtrl_GetToolTips(m_hwnd);
-    }
-    BOOL Tab::getUnicodeFormat()
-    {
-        return TabCtrl_GetUnicodeFormat(m_hwnd);
-    }
-    void Tab::highlightItem(int i, WORD highlight)
-    {
-        TabCtrl_HighlightItem(m_hwnd, i, highlight);
-    }
-    int Tab::hitTest(TCHITTESTINFO const& info)
-    {
-		return TabCtrl_HitTest(m_hwnd, &info);
-    }
-    void Tab::removeImage(int i)
-    {
-        TabCtrl_RemoveImage(m_hwnd, i);
-    }
-    void Tab::setCurFocus(int i)
-    {
-        TabCtrl_SetCurFocus(m_hwnd, i);
-    }
-    void Tab::setExtendedStyle(DWORD styles)
-    {
-        TabCtrl_SetExtendedStyle(m_hwnd, styles);
-    }
-    void Tab::setImageList(HIMAGELIST list)
-    {
-        TabCtrl_SetImageList(m_hwnd, list);
-    }
-    void Tab::setItem(int i, TCITEM const& item)
-    {
-        TabCtrl_SetItem(m_hwnd, i, &item);
-    }
-    void Tab::setItemExtra(int extraBytes)
-    {
-        TabCtrl_SetItemExtra(m_hwnd, extraBytes);
-    }
-    void Tab::setItemSize(int x, int y)
-    {
-        TabCtrl_SetItemSize(m_hwnd, x, y);
-    }
-    void Tab::setMinTabWidth(int x)
-    {
-        TabCtrl_SetMinTabWidth(m_hwnd, x);
-    }
-    void Tab::setPadding(int cx, int cy)
-    {
-        TabCtrl_SetPadding(m_hwnd, cx, cy);
-    }
-    void Tab::setToolTips(HWND tooltip)
-    {
-        TabCtrl_SetToolTips(m_hwnd, tooltip);
-    }
-    void Tab::setUnicodeFormat(BOOL unicode)
-    {
-        TabCtrl_SetUnicodeFormat(m_hwnd, unicode);
-    }
-    Button::Button(HWND parent)
-    {
-		auto const rcClient = GetClientRect(parent);
-		m_hwnd = CreateWindow(
-			ClassName,
-			L"",
-			WS_TABSTOP | WS_CHILD | WS_VISIBLE | BS_DEFPUSHBUTTON,
-			0, 0, rcClient.right/2, rcClient.bottom/2,
-			parent,
-			NULL,
-			gHinst,
-			NULL);
-    }
-    Button::Button(HWND parent, DWORD style)
-    {
-        auto const rcClient = GetClientRect(parent);
-        m_hwnd = CreateWindow(
-            ClassName,
-            L"",
-            WS_TABSTOP | WS_CHILD | WS_VISIBLE | style,
-            0, 0, rcClient.right / 2, rcClient.bottom / 2,
-            parent,
-            NULL,
-            gHinst,
-            NULL);
-    }
-    Button::Button(HWND parent, DWORD style, int x, int y, int width, int height)
-    {
-        m_hwnd = CreateWindow(
-            ClassName,
-            L"",
-            WS_TABSTOP | WS_CHILD | WS_VISIBLE | style,
-            x, y, width, height,
-            parent,
-            NULL,
-            gHinst,
-            NULL);
-    }
-    void Button::setText(LPCTSTR text)
-    {
-		Button_SetText(m_hwnd, text);
-    }
-    void Button::getIdealSize(SIZE& size)
-    {
-        sendMessage(BCM_GETIDEALSIZE, 0, reinterpret_cast<LPARAM>(&size));
-    }
-    void Button::setCheck(int check)
-    {
-        Button_SetCheck(m_hwnd, check);
-    }
-    LRESULT Control::sendMessage(UINT message, WPARAM wParam, LPARAM lParam)
-    {
-        return SendMessage(m_hwnd, message, wParam, lParam);
-    }
-    Control::Handle Control::getHandle() const
-    {
-        return m_hwnd;
-    }
-    void Controls::Control::setVisible(bool visible)
-    {
-		ShowWindow(m_hwnd, visible? SW_SHOW : SW_HIDE);
-    }
-    Tooltip::Tooltip(HWND parent, DWORD style)
-    {
-        m_hwnd = CreateWindowEx(
-            WS_EX_TOPMOST, ClassName, NULL, WS_POPUP | TTS_ALWAYSTIP | TTS_BALLOON | style,
-            CW_USEDEFAULT, CW_USEDEFAULT,
-            CW_USEDEFAULT, CW_USEDEFAULT,
-            parent, NULL, gHinst, NULL);
-    }
-    void Tooltip::activate()
-    {
-        SendMessage(m_hwnd, TTM_ACTIVATE, TRUE, 0);
-    }
-    void Tooltip::deactivate()
-    {
-        SendMessage(m_hwnd, TTM_ACTIVATE, FALSE, 0);
-    }
-    void Tooltip::addTool(TOOLINFO const& toolInfo)
-    {
-        SendMessage(m_hwnd, TTM_ADDTOOL, 0, reinterpret_cast<LPARAM>(&toolInfo));
-    }
-
-    void Tooltip::adjustRect(BOOL textToWindow, RECT& rect)
-    {
-        SendMessage(m_hwnd, TTM_ADJUSTRECT, textToWindow, reinterpret_cast<LPARAM>(&rect));
-    }
-
-    void Tooltip::delTool(TOOLINFO const& toolInfo)
-    {
-        sendMessage(TTM_DELTOOL, 0, reinterpret_cast<LPARAM>(&toolInfo));
-    }
-    BOOL Tooltip::enumTool(int i, TOOLINFO& info)
-    {
-        return sendMessage(TTM_ENUMTOOLS, i, reinterpret_cast<LPARAM>(&info));
-    }
-    SIZE Tooltip::getBubbleSize(TOOLINFO const& info)
-    {
-        auto const result = sendMessage(TTM_GETBUBBLESIZE, 0, reinterpret_cast<LPARAM>(&info));
-        return SIZE{ .cx = LOWORD(result), .cy = HIWORD(result) };
-    }
-    BOOL Tooltip::getCurrentTool(TOOLINFO& info)
-    {
-        return sendMessage(TTM_GETCURRENTTOOL, 0, reinterpret_cast<LPARAM>(&info));
-    }
-    BOOL Tooltip::getCurrentTool()
-    {
-        return sendMessage(TTM_GETCURRENTTOOL, 0, NULL);
-    }
-    INT Tooltip::getDelayTime(Delay delayType)
-    {
-        return sendMessage(TTM_GETDELAYTIME, static_cast<WPARAM>(delayType), 0);
-    }
-    void Tooltip::getMargin(RECT& margin)
-    {
-        sendMessage(TTM_GETMARGIN, 0, reinterpret_cast<LPARAM>(&margin));
-    }
-    INT Tooltip::getMaxTipWidth()
-    {
-        return sendMessage(TTM_GETMAXTIPWIDTH, 0, 0);
-    }
-
-    void Tooltip::getText(WPARAM count, TOOLINFO& info)
-    {
-        sendMessage(TTM_GETTEXT, count, reinterpret_cast<LPARAM>(&info));
-    }
-
-    COLORREF Tooltip::getTipBkColor()
-    {
-        return sendMessage(TTM_GETTIPBKCOLOR, 0, 0);
-    }
-
-    COLORREF Tooltip::getTipTextColor()
-    {
-        return sendMessage(TTM_GETTIPTEXTCOLOR, 0, 0);
-    }
-
-    void Tooltip::getTitle(TTGETTITLE& title)
-    {
-        sendMessage(TTM_GETTITLE, 0, reinterpret_cast<LPARAM>(&title));
-    }
-
-    INT Tooltip::getToolCount()
-    {
-        return sendMessage(TTM_GETTOOLCOUNT, 0, 0);
-    }
-
-    BOOL Tooltip::getToolInfo(TOOLINFO& toolInfo)
-    {
-        return sendMessage(TTM_GETTOOLINFO, 0, reinterpret_cast<LPARAM>(&toolInfo));
-    }
-
-    BOOL Tooltip::hitTest(TTHITTESTINFO const& info)
-    {
-        return sendMessage(TTM_HITTEST, 0, reinterpret_cast<LPARAM>(&info));
-    }
-
-    void Tooltip::newToolRect(TOOLINFO const& info)
-    {
-        sendMessage(TTM_NEWTOOLRECT, 0, reinterpret_cast<LPARAM>(&info));
-    }
-
-    void Tooltip::pop()
-    {
-        sendMessage(TTM_POP, 0, 0);
-    }
-
-    void Tooltip::popUp()
-    {
-        sendMessage(TTM_POPUP, 0, 0);
-    }
-
-    void Tooltip::relayEvent(MSG const& msg)
-    {
-        sendMessage(TTM_RELAYEVENT, 0, reinterpret_cast<LPARAM>(&msg));
-    }
-
-    void Tooltip::setDelayTime(Delay delay, int milliseconds)
-    {
-        sendMessage(TTM_SETDELAYTIME, static_cast<WPARAM>(delay),
-            static_cast<LPARAM>(milliseconds));
-    }
-
-    void Tooltip::setMargin(RECT const& margin)
-    {
-        sendMessage(TTM_SETMARGIN, 0, reinterpret_cast<LPARAM>(&margin));
-    }
-
-    int Tooltip::setMaxTipWidth(int maxWidth)
-    {
-        return sendMessage(TTM_SETMAXTIPWIDTH, 0, maxWidth);
-    }
-
-    void Tooltip::setTipBkColor(COLORREF backgroundColor)
-    {
-        sendMessage(TTM_SETTIPBKCOLOR, backgroundColor, 0);
-    }
-
-    void Tooltip::setTipTextColor(COLORREF textColor)
-    {
-        sendMessage(TTM_SETTIPTEXTCOLOR, textColor, 0);
-    }
-
-    BOOL Tooltip::setTitle(Icon icon, LPCTSTR title)
-    {
-        return sendMessage(TTM_SETTITLE, 
-            static_cast<WPARAM>(icon), 
-            reinterpret_cast<LPARAM>(title));
-    }
-
-    void Tooltip::setToolInfo(TOOLINFO const& info)
-    {
-        sendMessage(TTM_SETTOOLINFO, 0, reinterpret_cast<LPARAM>(&info));
-    }
-
-    void Tooltip::setWindowTheme(LPCTSTR visualStyle)
-    {
-        sendMessage(TTM_SETWINDOWTHEME, 0, reinterpret_cast<LPARAM>(visualStyle));
-    }
-
-    void Tooltip::trackActivate(BOOL activate, TOOLINFO const& info)
-    {
-        sendMessage(TTM_TRACKACTIVATE, activate, reinterpret_cast<LPARAM>(&info));
-    }
-
-    void Tooltip::trackPosition(int x, int y)
-    {
-        sendMessage(TTM_TRACKPOSITION, 0, MAKEWPARAM(x, y));
-    }
-
-    void Tooltip::update()
-    {
-        sendMessage(TTM_UPDATE, 0, 0);
-    }
-
-    void Tooltip::updateTipText(TOOLINFO const& info)
-    {
-        sendMessage(TTM_UPDATETIPTEXT, 0, reinterpret_cast<LPARAM>(&info));
-    }
-
-    HWND Tooltip::windowFromPoint(POINT p)
-    {
-        return reinterpret_cast<HWND>(sendMessage(
-            TTM_WINDOWFROMPOINT, 0, reinterpret_cast<LPARAM>(&p)));
-    }
-
-    DLLVERSIONINFO GetVersion()
-    {
-        auto const hInstance = LoadLibrary(L"C:\\Windows\\System32\\ComCtl32.dll");
-        if (!hInstance)
-            return {};
-
-        auto const getVersionProc = reinterpret_cast<DLLGETVERSIONPROC>(
-            GetProcAddress(hInstance, "DllGetVersion"));
-        if (!getVersionProc)
-        {
-            FreeLibrary(hInstance);
-            return {};
-        }			
-
-        DLLVERSIONINFO info{};
-        info.cbSize = sizeof(info);
-        auto hr = getVersionProc(&info);
-        FreeLibrary(hInstance);
-        return info;
-    }
-    Trackbar::Trackbar(HWND parent, DWORD style, int x, int y, int width, int height)
-    {
-        m_hwnd = CreateWindowEx(
-            0, ClassName, L"",
-            WS_CHILD | WS_VISIBLE | style,
-            x, y, width, height, parent,
-            NULL, gHinst, NULL 
-        );
-    }
-
-    void Trackbar::setRange(int min, int max)
-    {
-        sendMessage(TBM_SETRANGE, TRUE, MAKEWPARAM(min, max));
-    }
-
-    int Trackbar::getPos()
-    {
-        return sendMessage(TBM_GETPOS, 0, 0);
-    }
-
-    void Trackbar::setPos(bool redraw, int position)
-    {
-        sendMessage(TBM_SETPOS, redraw, position);
-    }
 
 }
 
@@ -744,7 +329,8 @@ public:
     void onClick(Handler&& handler)
     {
         OnClickHandlers.remove(m_hwnd);
-        OnClickHandlers.add(m_hwnd, [handler, this](HWND hwnd) {
+        OnClickHandlers.add(m_hwnd, [handler, this](HWND hwnd) 
+        {
             m_checked = !m_checked;
             Button_SetCheck(hwnd, m_checked);
             handler(hwnd);
@@ -904,9 +490,9 @@ class DwmAttributeCheckbox : public Checkbox
     ValueType const m_disableValue;
 public:
     DwmAttributeCheckbox(HWND parent, LPCTSTR text, int x, int y, int width, int height, DWORD attribute, ValueType enableValue, ValueType disableValue = {})
-		: Checkbox(parent, text, x, y, width, height), m_attribute{m_attribute}, m_enableValue{ enableValue }, m_disableValue{disableValue}
+		: Checkbox(parent, text, x, y, width, height), m_attribute{ attribute }, m_enableValue{ enableValue }, m_disableValue{disableValue}
 	{
-        onClick([this]
+        onClick([this](HWND)
         {
             if (gCreatedWindow)
             {
@@ -915,6 +501,31 @@ public:
             }
         });
 	}
+};
+
+template<typename ValueType>
+class DwmAttributeRadioButton : public RadioButton
+{
+	DWORD const m_attribute{};
+	ValueType const m_enableValue;
+	ValueType const m_disableValue;
+public:
+    bool isChecked() const
+    {
+        return false;
+    }
+    DwmAttributeRadioButton(HWND parent, LPCTSTR text, int x, int y, int width, int height, DWORD attribute, ValueType enableValue, ValueType disableValue = {})
+        : RadioButton(parent, text, x, y, width, height), m_attribute{ attribute }, m_enableValue{ enableValue }, m_disableValue{ disableValue }
+    {
+		onClick([this](HWND)
+		{
+			if (gCreatedWindow)
+			{
+				DwmSetWindowAttribute(gCreatedWindow, m_attribute,
+					isChecked() ? &m_enableValue : &m_disableValue, sizeof(ValueType));
+			}
+		});
+    }
 };
 
 class Relation
@@ -1054,27 +665,27 @@ class LayeredWindowAttributes
     void addHandler()
     {
         //add handlers for sliders
-        m_sliderR.onPositionChange([this](/*NMTRBTHUMBPOSCHANGING* position*/)
+        m_sliderR.onPositionChange([this]()
         {
             m_R = static_cast<BYTE>(m_sliderR.getPos());
             if (gCreatedWindow && isRGBMode())
                 setLayeredWindow(true);
         });
 
-        m_sliderG.onPositionChange([this](/*NMTRBTHUMBPOSCHANGING* position*/)
+        m_sliderG.onPositionChange([this]()
         {
             m_G = static_cast<BYTE>(m_sliderG.getPos());
             if(gCreatedWindow && isRGBMode())
                 setLayeredWindow(true);
         });
-        m_sliderB.onPositionChange([this](/*NMTRBTHUMBPOSCHANGING* position*/)
+        m_sliderB.onPositionChange([this]()
         {
             m_B = static_cast<BYTE>(m_sliderB.getPos());
             if (gCreatedWindow && isRGBMode())
                 setLayeredWindow(true);
         });
 
-        m_sliderA.onPositionChange([this](/*NMTRBTHUMBPOSCHANGING* position*/)
+        m_sliderA.onPositionChange([this]()
         {
             m_alpha = static_cast<BYTE>(m_sliderA.getPos());
             if (gCreatedWindow && !isRGBMode())
@@ -1147,11 +758,30 @@ public:
         GetInstance().setLayeredWindow(GetInstance().isRGBMode());
         DWMNCRENDERINGPOLICY ncrp = DWMNCRP_DISABLED;
 
-         //Disable non-client area rendering on the window.
-        auto hr = ::DwmSetWindowAttribute(gCreatedWindow,
-            DWMWA_NCRENDERING_POLICY,
-            &ncrp,
-            sizeof(ncrp));
+        //Disable non-client area rendering on the window.
+        //auto hr = ::DwmSetWindowAttribute(gCreatedWindow,
+        //    DWMWA_NCRENDERING_POLICY,
+        //    &ncrp,
+        //    sizeof(ncrp));
+#pragma warning(disable : 4995)
+        //DwmEnableComposition(DWM_EC_DISABLECOMPOSITION);
+
+        //SetWindowTheme(gCreatedWindow, L" ", L" ");
+		
+
+        DWM_BLURBEHIND blur
+        {
+            .dwFlags = DWM_BB_ENABLE,
+            .fEnable = true,
+            .hRgnBlur = 0,
+            .fTransitionOnMaximized = FALSE
+        };
+		DwmEnableBlurBehindWindow(gCreatedWindow, &blur);
+
+        BOOL const iconic = TRUE;
+        BOOL const hasIcon = TRUE;
+		DwmSetWindowAttribute(gCreatedWindow, DWMWA_FORCE_ICONIC_REPRESENTATION, &iconic, sizeof(iconic));
+		DwmSetWindowAttribute(gCreatedWindow, DWMWA_HAS_ICONIC_BITMAP, &hasIcon, sizeof(hasIcon));
 
         static std::thread t{ [] {
             while (gCreatedWindow)
@@ -1159,7 +789,7 @@ public:
                 InvalidateRect(
                     gCreatedWindow,
                     NULL,
-                    TRUE
+                    FALSE
                 );
                 std::this_thread::sleep_for(std::chrono::milliseconds{ 10 });
             }
@@ -1174,6 +804,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_ LPWSTR    lpCmdLine,
                      _In_ int       nCmdShow)
 {
+    CoInitialize(nullptr);
     gHinst = hInstance;
     gNCmdShow = nCmdShow;
     auto info = Controls::GetVersion();
@@ -1256,30 +887,36 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         LayeredWindowAttributes::GetInstance().setVisible(layered.isChecked());
     });
 
+    //DWM attributes
     x = 1500;
     row = 1;
-	//DWM attributes
-	Groupbox dwmAttributes          { gHwnd, L"DWM Attributes", x, 0, 500, 1000 };
-    Checkbox ncRendering            { gHwnd, L"DWM NCRendering", x, height * row++, width, height };
-	Checkbox transition             {gHwnd, L"Transition", x, height * row++, width, height};
-	Checkbox allowNCPaint           {gHwnd, L"Allow NC paint", x, height * row++, width, height};
-	Checkbox ncRightToLeftLayout    { gHwnd, L"NC Right to Left layout", x, height * row++, width, height };
-	Checkbox forceIconicPresentation{gHwnd, L"Force iconic representation", x, height * row++, width, height};
-	Checkbox hasIconicBitmap        {gHwnd, L"Has iconic bitmap", x, height * row++, width, height};
-    RadioButton flip3D[]
+	Groupbox dwmAttributes                      { gHwnd, L"DWM Attributes", x, 0, 500, 1000 };
+    DwmAttributeCheckbox ncRendering            { gHwnd, L"DWM NCRendering", x, height * row++, width, height, DWMWINDOWATTRIBUTE::DWMWA_NCRENDERING_POLICY, DWMNCRENDERINGPOLICY::DWMNCRP_ENABLED, DWMNCRENDERINGPOLICY::DWMNCRP_DISABLED };
+	DwmAttributeCheckbox transition             {gHwnd, L"Transition", x, height * row++, width, height, DWMWINDOWATTRIBUTE::DWMWA_TRANSITIONS_FORCEDISABLED, FALSE, TRUE};
+	DwmAttributeCheckbox allowNCPaint           {gHwnd, L"Allow NC paint", x, height * row++, width, height, DWMWINDOWATTRIBUTE::DWMWA_ALLOW_NCPAINT, TRUE, FALSE};
+	DwmAttributeCheckbox ncRightToLeftLayout    { gHwnd, L"NC Right to Left layout", x, height * row++, width, height, DWMWINDOWATTRIBUTE::DWMWA_NONCLIENT_RTL_LAYOUT, TRUE, FALSE };
+	DwmAttributeCheckbox forceIconicPresentation{gHwnd, L"Force iconic representation", x, height * row++, width, height, DWMWINDOWATTRIBUTE::DWMWA_FORCE_ICONIC_REPRESENTATION, TRUE, FALSE};
+	DwmAttributeCheckbox hasIconicBitmap        {gHwnd, L"Has iconic bitmap", x, height * row++, width, height, DWMWINDOWATTRIBUTE::DWMWA_HAS_ICONIC_BITMAP, TRUE, FALSE};
+    std::array flip3D
     {
-        RadioButton{gHwnd, L"DWMFLIP3D_DEFAULT",        x + 50, height * row++, width, height},
-        RadioButton{gHwnd, L"DWMFLIP3D_EXCLUDEBELOW",   x + 50, height * row++, width, height},
-        RadioButton{gHwnd, L"DWMFLIP3D_EXCLUDEABOVE",   x + 50, height * row++, width, height},
+        DwmAttributeRadioButton{gHwnd, L"DWMFLIP3D_DEFAULT",        x + 50, height * row++, width, height, DWMWA_FLIP3D_POLICY, DWMFLIP3DWINDOWPOLICY::DWMFLIP3D_DEFAULT},
+        DwmAttributeRadioButton{gHwnd, L"DWMFLIP3D_EXCLUDEBELOW",   x + 50, height * row++, width, height, DWMWA_FLIP3D_POLICY, DWMFLIP3DWINDOWPOLICY::DWMFLIP3D_EXCLUDEBELOW},
+        DwmAttributeRadioButton{gHwnd, L"DWMFLIP3D_EXCLUDEABOVE",   x + 50, height * row++, width, height, DWMWA_FLIP3D_POLICY, DWMFLIP3DWINDOWPOLICY::DWMFLIP3D_EXCLUDEABOVE},
     };
-	Checkbox disallowPeek           {gHwnd, L"Disallow peek", x, height * row++, width, height};
-	Checkbox excludedFromPeek       {gHwnd, L"Excluded from peek", x, height * row++, width, height};
-	Checkbox dwmCloak               {gHwnd, L"DWM Cloak", x, height * row++, width, height};
-	Checkbox freezeRepresentation   {gHwnd, L"Freeze representation", x, height * row++, width, height};
+	DwmAttributeCheckbox disallowPeek           {gHwnd, L"Disallow peek", x, height * row++, width, height, DWMWINDOWATTRIBUTE::DWMWA_DISALLOW_PEEK, TRUE, FALSE};
+	DwmAttributeCheckbox excludedFromPeek       {gHwnd, L"Excluded from peek", x, height * row++, width, height, DWMWINDOWATTRIBUTE::DWMWA_EXCLUDED_FROM_PEEK, TRUE, FALSE};
+	DwmAttributeCheckbox dwmCloak               {gHwnd, L"DWM Cloak", x, height * row++, width, height, DWMWINDOWATTRIBUTE::DWMWA_CLOAK, TRUE, FALSE};
+	DwmAttributeCheckbox freezeRepresentation   {gHwnd, L"Freeze representation", x, height * row++, width, height, DWMWINDOWATTRIBUTE::DWMWA_FREEZE_REPRESENTATION, TRUE, FALSE};
     //Windows 11 attributes
-	Checkbox useHostBackdropBrush   {gHwnd, L"Use host backdrop brush", x, height * row++, width, height};
-	Checkbox useImmersiveDarkMode   {gHwnd, L"Use immersive dark mode", x, height * row++, width, height};
-	Checkbox windowCornerPreference {gHwnd, L"Window corner preference", x, height * row++, width, height};
+    DwmAttributeCheckbox useHostBackdropBrush   {gHwnd, L"Use host backdrop brush", x, height * row++, width, height, DWMWINDOWATTRIBUTE::DWMWA_USE_HOSTBACKDROPBRUSH, TRUE, FALSE};
+    DwmAttributeCheckbox useImmersiveDarkMode   {gHwnd, L"Use immersive dark mode", x, height * row++, width, height, DWMWINDOWATTRIBUTE::DWMWA_USE_IMMERSIVE_DARK_MODE, TRUE, FALSE};
+    std::array windowCornerPreference
+    {
+        DwmAttributeRadioButton{gHwnd, L"DWM_WINDOW_CORNER_PREFERENCE::DWMWCP_DEFAULT", x, height * row++, width, height, DWMWA_WINDOW_CORNER_PREFERENCE, DWM_WINDOW_CORNER_PREFERENCE::DWMWCP_DEFAULT},
+		DwmAttributeRadioButton{gHwnd, L"DWM_WINDOW_CORNER_PREFERENCE::DWM_DONOTROUND", x, height * row++, width, height, DWMWA_WINDOW_CORNER_PREFERENCE, DWM_WINDOW_CORNER_PREFERENCE::DWMWCP_DONOTROUND},
+        DwmAttributeRadioButton{gHwnd, L"DWM_WINDOW_CORNER_PREFERENCE::DWM_ROUND", x, height * row++, width, height, DWMWA_WINDOW_CORNER_PREFERENCE, DWM_WINDOW_CORNER_PREFERENCE::DWMWCP_ROUND},
+		DwmAttributeRadioButton{gHwnd, L"DWM_WINDOW_CORNER_PREFERENCE::DWM_ROUNDSMALL", x, height * row++, width, height, DWMWA_WINDOW_CORNER_PREFERENCE, DWM_WINDOW_CORNER_PREFERENCE::DWMWCP_ROUNDSMALL},
+    };
 	Checkbox borderColor            {gHwnd, L"Border color", x, height * row++, width, height};
 	Checkbox captionColor           {gHwnd, L"Caption color", x, height * row++, width, height};
 	
@@ -1427,8 +1064,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             << windowEdge;
 
 		
-			
-		gCreatedWindow = CreateWindowEx(extendedStyle, className, os.str().c_str(), 
+		gCreatedWindow = CreateWindowExW(extendedStyle, className, os.str().c_str(), 
             style, 1000, 1000, 800, 600, nullptr, nullptr, gHinst, nullptr);
 	
 
@@ -1500,61 +1136,74 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     return 0;
 }
 
-
-
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+static LRESULT OnCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	
-    switch (message)
+    //switch(wPa)
+    int wmId = LOWORD(wParam);
+    // Parse the menu selections:
+    switch (wmId)
     {
-        case WM_COMMAND:
-            {
-			    //switch(wPa)
-                int wmId = LOWORD(wParam);
-                // Parse the menu selections:
-                switch (wmId)
-                {
-                    case IDM_ABOUT:
-                        DialogBox(gHinst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-                        break;
-                    case IDM_EXIT:
-                        DestroyWindow(hWnd);
-                        break;
-                    case Controls::Button::Message::Clicked:   Button::OnClickHandlers.call(HWND(lParam), HWND(lParam)); break;
-                    case Controls::Button::Message::Pushed:
-						OutputDebugString(L"Button pushed");
-						break;
-                    case Controls::Button::Message::HotItemChange:
-	                    OutputDebugString(L"Button hot item change");
-                        break;
-                    default:
-                        return DefWindowProc(hWnd, message, wParam, lParam);
-                }
-            }
+        case IDM_ABOUT:
+            DialogBox(gHinst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
             break;
-        case WM_PAINT:
-            {
-                PAINTSTRUCT ps;
-                HDC hdc = BeginPaint(hWnd, &ps);
-                // TODO: Add any drawing code that uses hdc here...
-                EndPaint(hWnd, &ps);
-            }
+        case IDM_EXIT:
+            DestroyWindow(hWnd);
             break;
-        case WM_DESTROY:
-            PostQuitMessage(0);
+        case Controls::Button::Message::Clicked:   Button::OnClickHandlers.call(HWND(lParam), HWND(lParam)); break;
+        case Controls::Button::Message::Pushed:
+            OutputDebugString(L"Button pushed");
             break;
-        case WM_HSCROLL:
-            if (LOWORD(wParam) == TB_THUMBTRACK)
-            {
-                Slider::OnThumbPositionChangeHandlers.call(HWND(lParam));
-            }
+        case Controls::Button::Message::HotItemChange:
+            OutputDebugString(L"Button hot item change");
             break;
-        case WM_NOTIFY:
-            return DefWindowProc(hWnd, message, wParam, lParam);
         default:
             return DefWindowProc(hWnd, message, wParam, lParam);
     }
-    return 0;
+    return {};
+}
+
+static LRESULT OnPaint(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    PAINTSTRUCT ps;
+    HDC hdc = BeginPaint(hWnd, &ps);
+
+    // TODO: Add any drawing code that uses hdc here...
+
+    EndPaint(hWnd, &ps);
+    return {};
+}
+
+static LRESULT OnDestroy(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    PostQuitMessage(0);
+    return {};
+}
+
+static LRESULT OnHScroll(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    if (LOWORD(wParam) == TB_THUMBTRACK)
+    {
+        Slider::OnThumbPositionChangeHandlers.call(HWND(lParam));
+    }
+    return {};
+}
+
+static LRESULT OnNotify(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    return DefWindowProc(hWnd, message, wParam, lParam);
+}
+
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    switch (message)
+    {
+        case WM_COMMAND:    return OnCommand(hWnd, message, wParam, lParam);
+        case WM_PAINT:      return OnPaint(hWnd, message, wParam, lParam);
+        case WM_DESTROY:    return OnDestroy(hWnd, message, wParam, lParam);
+        case WM_HSCROLL:    return OnHScroll(hWnd, message, wParam, lParam);
+        case WM_NOTIFY:     return OnNotify(hWnd, message, wParam, lParam);
+        default:            return DefWindowProc(hWnd, message, wParam, lParam);
+    }
 }
 
 // Message handler for about box.

@@ -1,5 +1,7 @@
+#include "pch.h"
 #include "ButtonPage.h"
 #include "ButtonEx.h"
+
 
 Content ButtonPage::GetSimpleButtonContent()
 {

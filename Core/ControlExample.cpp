@@ -1,4 +1,6 @@
+#include "pch.h"
 #include "ControlExample.h"
+
 
 void ControlExample::setHeaderText(std::string&& text)
 {

@@ -40,7 +40,11 @@ Built on top of the core layer, the framework layers provides a higher-level, de
 
 
 ## Examples
-- Window gallery: All window styles with interactive switches that applies to an example window in real time
+- Window gallery: All window styles with interactive switches that applies to an example window in real time, including:
+  + `WS_` window styles
+  + `WS_EX_` extended window styles
+  + DWM attributes
+  + custom rendering
 
 ## Build
 ### Linking

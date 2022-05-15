@@ -12,6 +12,7 @@
 #include <Uxtheme.h>
 #include <array>
 #include <future>
+#include "ButtonEx.h"
 #include "SplashScreen.h"
 
 
@@ -75,106 +76,83 @@ LRESULT CALLBACK WndProc2(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 
-namespace Controls
+
+static ATOM MyRegisterClass(HINSTANCE hInstance)
 {
-    static ATOM MyRegisterClass(HINSTANCE hInstance)
-    {
-        WNDCLASSEXW wcex;
-        wcex.cbSize = sizeof(WNDCLASSEX);
-        wcex.style = CS_HREDRAW | CS_VREDRAW;
-        wcex.lpfnWndProc = WndProc;
-        wcex.cbClsExtra = 0;
-        wcex.cbWndExtra = 0;
-        wcex.hInstance = hInstance;
-        wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_CORE));
-        wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
-        wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-        wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_CORE);
-        wcex.lpszClassName = szWindowClass;
-        wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+	WNDCLASSEXW wcex;
+	wcex.cbSize = sizeof(WNDCLASSEX);
+	wcex.style = CS_HREDRAW | CS_VREDRAW;
+	wcex.lpfnWndProc = WndProc;
+	wcex.cbClsExtra = 0;
+	wcex.cbWndExtra = 0;
+	wcex.hInstance = hInstance;
+	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_CORE));
+	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_CORE);
+	wcex.lpszClassName = szWindowClass;
+	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
-        return RegisterClassExW(&wcex);
-    }
+	return RegisterClassExW(&wcex);
+}
 
 
-    BOOL InitInstance(int nCmdShow)
-    {
+BOOL InitInstance(int nCmdShow)
+{
 
-        gHwnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-            500, 500, 2000, 1000, nullptr, nullptr, gHinst, nullptr);
-		
+	gHwnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+		500, 500, 2000, 1000, nullptr, nullptr, gHinst, nullptr);
 
-        if (!gHwnd)
-        {
-            return FALSE;
-        }
 
-        std::shared_ptr<SplashScreen> splashScreen;
-        if (RECT mainWindowRect{}; GetWindowRect(gHwnd, &mainWindowRect))
-        {
-            splashScreen = std::make_shared<SplashScreen>(mainWindowRect.left + 9, mainWindowRect.top, mainWindowRect.right - mainWindowRect.left - 18, mainWindowRect.bottom - mainWindowRect.top - 9, 500);
-        }
-        else
-        {
-            splashScreen = std::make_shared<SplashScreen>(CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, 500);
-        }
+	if (!gHwnd)
+	{
+		return FALSE;
+	}
 
-        splashScreen->setImage(Graphics::Bitmap{
-            /*Graphics::Image{L"splash.png", Graphics::Image::Type::Bitmap, 200,200,LR_LOADFROMFILE}*/
-			L"splash.png"
-        });
-        splashScreen->onFinish([] {
-            ShowWindow(gHwnd, SW_SHOWNOACTIVATE);
-        });
+	std::shared_ptr<SplashScreen> splashScreen;
+	if (RECT mainWindowRect{}; GetWindowRect(gHwnd, &mainWindowRect))
+	{
+		splashScreen = std::make_shared<SplashScreen>(mainWindowRect.left + 9, mainWindowRect.top, mainWindowRect.right - mainWindowRect.left - 18, mainWindowRect.bottom - mainWindowRect.top - 9, 500);
+	}
+	else
+	{
+		splashScreen = std::make_shared<SplashScreen>(CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, 500);
+	}
 
-        splashScreen->show();
-        UpdateWindow(gHwnd);
-        return TRUE;
-    }
+	splashScreen->setImage(Graphics::Bitmap{
+		/*Graphics::Image{L"splash.png", Graphics::Image::Type::Bitmap, 200,200,LR_LOADFROMFILE}*/
+		L"splash.png"
+		});
+	splashScreen->onFinish([] {
+		ShowWindow(gHwnd, SW_SHOWNOACTIVATE);
+		});
+
+	splashScreen->show();
+	UpdateWindow(gHwnd);
+	return TRUE;
+}
+
+
+void InitWindow()
+{
+	// Initialize global strings
+	LoadStringW(gHinst, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
+	LoadStringW(gHinst, IDC_CORE, szWindowClass, MAX_LOADSTRING);
+	MyRegisterClass(gHinst);
+	// Perform application initialization:
+	if (!InitInstance(gNCmdShow))
+	{
+		return;
+	}
+}
+
+
 	
-	
-    void InitWindow()
-    {
-        // Initialize global strings
-        LoadStringW(gHinst, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-        LoadStringW(gHinst, IDC_CORE, szWindowClass, MAX_LOADSTRING);
-        MyRegisterClass(gHinst);
-        // Perform application initialization:
-        if (!InitInstance(gNCmdShow))
-        {
-            return;
-        }
-
-
-    }
-
-    void InitControls()
-    {
-        INITCOMMONCONTROLSEX const icce
-        {
-            .dwSize = sizeof(icce),
-            .dwICC = ICC_WIN95_CLASSES
-        };
-        InitCommonControlsEx(&icce);
-    }
-	
-    void Init()
-    {
-        SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
-        InitWindow();
-        InitControls();
-    }
-
-
-
-
-    
-    
-
-
-
-
-
+void Init()
+{
+    SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
+    InitWindow();
+    Controls::Init();
 }
 
 static void Demo()
@@ -193,168 +171,7 @@ static void Demo()
     b.setText(st);
 }
 
-#include <unordered_map>
-#include <functional>
 
-template<typename Identifier, typename Function>
-class Handler
-{
-	std::unordered_map<Identifier, std::function<Function>> m_handlers;
-public:
-	template<typename Handler>
-	void add(Identifier id, Handler&& handler)
-	{
-		m_handlers.emplace(id, std::forward<Handler>(handler));
-	}
-
-    void remove(Identifier id)
-    {
-		m_handlers.erase(id);
-    }
-
-	template<typename Identifier, typename ... Args>
-	void call(Identifier id, Args&& ... args)
-	{
-        if (m_handlers.empty())
-            return;
-		
-		auto it = m_handlers.find(id);
-		if (it != m_handlers.end())
-		{
-			it->second(std::forward<Args>(args)...);
-		}
-	}
-};
-
-template<typename Function>
-class SingletonHandler
-{
-    Function handler;
-public:
-    void add(Function&& handler)
-    {
-        this->handler = handler;
-    }
-
-    void remove()
-    {
-        handler = {};
-    }
-
-    template<typename... Args>
-    void call(Args&&... args)
-    {
-        if (handler)
-            handler(std::forward<Args>(args)...);
-    }
-};
-
-class Button : public Controls::Button
-{
-    
-public:
-    static inline Handler<HWND, void(HWND)> OnClickHandlers;
-	Button(HWND parent, DWORD style, int x, int y, int width, int height)
-		: Controls::Button(parent, style, x, y, width, height)
-	{
-	}
-
-	Button(HWND parent, DWORD style)
-		: Controls::Button(parent, style)
-	{
-	}
-	
-	template<typename Handler>
-    void onClick(Handler&& handler)
-    {
-        OnClickHandlers.add(m_hwnd, std::move(handler));
-    }
-
-    void onClick()
-    {
-        OnClickHandlers.remove(m_hwnd);
-    }
-};
-
-class RadioButton : public Button
-{
-public:
-	RadioButton(HWND parent, LPCTSTR text, int x, int y, int width, int height)
-		: Button(parent, static_cast<DWORD>(Controls::Button::Style::RadioButton), x, y, width, height)
-	{
-        setText(text);
-	}
-};
-
-class Checkbox : public Button
-{
-    bool m_checked{};
-
-    void addHandler()
-    {
-        OnClickHandlers.add(m_hwnd, [this](HWND hwnd)
-		{
-			m_checked = !m_checked;
-			Button_SetCheck(hwnd, m_checked);
-		});
-    }
-	
-public:
-    Checkbox(HWND parent, LPCTSTR text)
-        : Button(parent, static_cast<DWORD>(Controls::Button::Style::Checkbox))
-    {
-        setText(text);
-        addHandler();
-    }
-
-	Checkbox(HWND parent, LPCTSTR text, int x, int y, int width, int height)
-		: Button(parent, static_cast<DWORD>(Controls::Button::Style::Checkbox), x, y, width, height)
-	{
-		setText(text);
-        addHandler();
-	}
-
-    bool isChecked() const
-    {
-        return m_checked;
-    }
-
-    void setCheck(bool check)
-    {
-        m_checked = check;
-        Button::setCheck(check);
-    }
-
-	template<typename Handler>
-    void onClick(Handler&& handler)
-    {
-        OnClickHandlers.remove(m_hwnd);
-        OnClickHandlers.add(m_hwnd, [handler, this](HWND hwnd) 
-        {
-            m_checked = !m_checked;
-            Button_SetCheck(hwnd, m_checked);
-            handler(hwnd);
-        });
-    }
-};
-
-
-
-class Groupbox : public Controls::Button
-{
-public:
-    Groupbox(HWND parent, LPCTSTR text)
-        : Button(parent, static_cast<DWORD>(Controls::Button::Style::Groupbox))
-    {
-		setText(text);
-    }
-
-    Groupbox(HWND parent, LPCTSTR text, int x, int y, int width, int height)
-        : Button(parent, static_cast<DWORD>(Controls::Button::Style::Groupbox), x, y, width, height)
-    {
-		setText(text);
-    }
-};
 
 class WindowStyleTooltip : public Controls::Tooltip
 {
@@ -923,7 +740,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	
 
     //Create window
-    Button createButton{ gHwnd, static_cast<DWORD>(Controls::Button::Style::PushButton), 1000, 600, width, height};
+    ButtonEx createButton{ gHwnd, static_cast<DWORD>(Controls::Button::Style::PushButton), 1000, 600, width, height};
     createButton.setText(L"Create window");
     createButton.onClick([&](HWND)
     {
@@ -1104,7 +921,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	
 
 	//Close window
-    Button closeButton{ gHwnd, static_cast<DWORD>(Controls::Button::Style::PushButton), 1000, 850, width, height };
+    ButtonEx closeButton{ gHwnd, static_cast<DWORD>(Controls::Button::Style::PushButton), 1000, 850, width, height };
     closeButton.setText(L"Close window");
     closeButton.onClick([](HWND)
         {
@@ -1149,7 +966,7 @@ static LRESULT OnCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         case IDM_EXIT:
             DestroyWindow(hWnd);
             break;
-        case Controls::Button::Message::Clicked:   Button::OnClickHandlers.call(HWND(lParam), HWND(lParam)); break;
+        case Controls::Button::Message::Clicked:   ButtonEx::OnClickHandlers.call(HWND(lParam), HWND(lParam)); break;
         case Controls::Button::Message::Pushed:
             OutputDebugString(L"Button pushed");
             break;

@@ -67,4 +67,14 @@ namespace Controls
 		FreeLibrary(hInstance);
 		return info;
 	}
+
+	inline void Init()
+	{
+		INITCOMMONCONTROLSEX const icce
+		{
+			.dwSize = sizeof(icce),
+			.dwICC = ICC_WIN95_CLASSES
+		};
+		InitCommonControlsEx(&icce);
+	}
 }

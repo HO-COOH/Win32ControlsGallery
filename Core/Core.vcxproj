@@ -149,6 +149,8 @@
     <ClInclude Include="Controls.Tooltip.hpp" />
     <ClInclude Include="Controls.Trackbar.hpp" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="UI.Dwm.hpp" />
+    <ClInclude Include="Util.Error.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">

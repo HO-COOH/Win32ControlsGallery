@@ -25,6 +25,11 @@
     <ClCompile Include="ControlBase.cpp" />
     <ClCompile Include="ControlExample.cpp" />
     <ClCompile Include="Core.cpp" />
+    <ClCompile Include="Gallery.MainWindow.cpp" />
+    <ClCompile Include="Gallery.Pages.WindowPage.DwmAttributeRadioButton.cpp" />
+    <ClCompile Include="Gallery.Pages.WindowPage.ExampleWindow.cpp" />
+    <ClCompile Include="Gallery.Pages.WindowPage.WindowStyleCheckbox.cpp" />
+    <ClCompile Include="Gallery.Pages.WindowPage.WindowStyleTooltip.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="PageBase.cpp" />
     <ClCompile Include="pch.cpp">
@@ -33,20 +38,28 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="SplashScreen.cpp" />
+    <ClCompile Include="Gallery.SplashScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ButtonEx.h" />
+    <ClInclude Include="Gallery.Button.h" />
     <ClInclude Include="ButtonPage.h" />
     <ClInclude Include="ControlBase.h" />
     <ClInclude Include="ControlExample.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="Gallery.MainWindow.h" />
+    <ClInclude Include="Gallery.Pages.WindowPage.DwmAttributeCheckbox.h" />
+    <ClInclude Include="Gallery.Pages.WindowPage.DwmAttributeRadioButton.h" />
+    <ClInclude Include="Gallery.Pages.WindowPage.ExampleWindow.h" />
+    <ClInclude Include="Gallery.Pages.WindowPage.WindowStyleCheckbox.h" />
+    <ClInclude Include="Gallery.Pages.WindowPage.WindowStyleTooltip.h" />
+    <ClInclude Include="Gallery.Slider.h" />
     <ClInclude Include="Graphics.h" />
+    <ClInclude Include="Handler.hpp" />
     <ClInclude Include="PageBase.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="SplashScreen.h" />
+    <ClInclude Include="Gallery.SplashScreen.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="WindowStyleDetail.h" />
   </ItemGroup>

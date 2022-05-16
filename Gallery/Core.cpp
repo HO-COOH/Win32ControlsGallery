@@ -11,10 +11,16 @@
 #include <dwmapi.h>
 #include <Uxtheme.h>
 #include <array>
-#include <future>
-#include "ButtonEx.h"
-#include "SplashScreen.h"
+#include "Gallery.SplashScreen.h"
+#include "Gallery.MainWindow.h"
+#include "Gallery.Pages.WindowPage.WindowStyleCheckbox.h"
+#include "Gallery.Slider.h"
+#include "Gallery.Pages.WindowPage.DwmAttributeCheckbox.h"
+#include "Gallery.Pages.WindowPage.DwmAttributeRadioButton.h"
+#include "Gallery.Pages.WindowPage.ExampleWindow.h"
 
+using namespace Gallery;
+using namespace Gallery::Pages::WindowPage;
 
 
 #pragma comment(lib, "dwmapi.lib")
@@ -25,82 +31,21 @@ name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
 processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
 HINSTANCE gHinst;
-static HWND gHwnd;
+HWND gHwnd;
 static HWND gCreatedWindow;
 static int gNCmdShow;
 #define MAX_LOADSTRING 100
 
 // Global Variables:
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
-WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 
 
-LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
-
-LRESULT CALLBACK WndProc2(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    switch (message)
-    {
-        //case WM_NCCALCSIZE:
-        //    return 0;
-        case WM_PAINT:
-        {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
-
-            auto redBrush = CreateSolidBrush(RGB(255, 0, 0));
-
-            FillRect(hdc, &ps.rcPaint, redBrush);
-
-            EndPaint(hWnd, &ps);
-            return {};
-        }
-        //case WM_NCPAINT:
-        //{
-        //    HDC hdc;
-        //    hdc = GetDCEx(hWnd, (HRGN)wParam, DCX_WINDOW | DCX_INTERSECTRGN);
-        //    
-        //    RECT rect{ .left = 0, .top = 0, .right = 1000, .bottom = 1000 };
-        //    auto redBrush = CreateSolidBrush(RGB(255, 0, 0));
-			
-
-        //    FillRect(hdc, &rect, redBrush);
-        //    // Paint into this DC 
-        //    ReleaseDC(hWnd, hdc);
-        //    return 0;
-        //}
-        default:
-            return DefWindowProc(hWnd, message, wParam, lParam);
-    }
-}
-
-
-
-static ATOM MyRegisterClass(HINSTANCE hInstance)
-{
-	WNDCLASSEXW wcex;
-	wcex.cbSize = sizeof(WNDCLASSEX);
-	wcex.style = CS_HREDRAW | CS_VREDRAW;
-	wcex.lpfnWndProc = WndProc;
-	wcex.cbClsExtra = 0;
-	wcex.cbWndExtra = 0;
-	wcex.hInstance = hInstance;
-	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_CORE));
-	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
-	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-	wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_CORE);
-	wcex.lpszClassName = szWindowClass;
-	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
-
-	return RegisterClassExW(&wcex);
-}
 
 
 BOOL InitInstance(int nCmdShow)
 {
 
-	gHwnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+	gHwnd = MainWindow::Create(szTitle, WS_OVERLAPPEDWINDOW,
 		500, 500, 2000, 1000, nullptr, nullptr, gHinst, nullptr);
 
 
@@ -137,8 +82,7 @@ void InitWindow()
 {
 	// Initialize global strings
 	LoadStringW(gHinst, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-	LoadStringW(gHinst, IDC_CORE, szWindowClass, MAX_LOADSTRING);
-	MyRegisterClass(gHinst);
+	MainWindow::Register(gHinst);
 	// Perform application initialization:
 	if (!InitInstance(gNCmdShow))
 	{
@@ -147,12 +91,12 @@ void InitWindow()
 }
 
 
-	
 void Init()
 {
     SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
     InitWindow();
     Controls::Init();
+    auto v = Controls::GetVersion();
 }
 
 static void Demo()
@@ -171,179 +115,6 @@ static void Demo()
     b.setText(st);
 }
 
-
-
-class WindowStyleTooltip : public Controls::Tooltip
-{
-public:
-    WindowStyleTooltip(HWND parent, DWORD style) :
-        Controls::Tooltip{ parent, style }
-    {
-
-    }
-
-private:
-    static inline HWND gItemTip{};
-
-    static WindowStyleTooltip& GetInstance()
-    {
-        WindowStyleTooltip tooltip{ gHwnd, 0 };
-        return tooltip;
-    }
-public:
-    static void OnResize(HWND hwnd, UINT state, int cx, int cy)
-    {
-        TOOLINFO info
-        {
-            .cbSize = sizeof(info) - sizeof(void*),
-            .hwnd = hwnd,
-            .uId = 0,
-        };
-        GetClientRect(hwnd, &info.rect);
-        GetInstance().newToolRect(info);
-    }
-
-    static void UpdateTooltip(HWND hwnd, int x, int y)
-    {
-        gItemTip = GetInstance().hitTest(
-            TTHITTESTINFO
-            {
-                .hwnd = hwnd,
-                .pt = POINT{.x = x, .y = y}
-            }
-        ) ? hwnd : HWND{};
-    }
-
-    static void RelayEvent(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
-    {
-        UpdateTooltip(hwnd, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-        GetInstance().relayEvent(
-            MSG
-            {
-                .hwnd = hwnd,
-                .message = msg,
-                .wParam = wParam,
-                .lParam = lParam
-            }
-        );
-    }
-};
-
-class WindowStyleCheckbox : public Checkbox
-{
-    DWORD m_style{};
-    LPCTSTR m_text{};
-    std::wstring m_description;
-    WindowStyleTooltip m_tip;
-
-    void addInfo()
-    {
-        m_tip.setTitle(Controls::Tooltip::Icon::InfoLarge, m_text);
-        TOOLINFO info
-        {
-            .cbSize = sizeof(info) - sizeof(void*),
-            .uFlags = TTF_IDISHWND | TTF_SUBCLASS,
-            .hwnd = gHwnd,
-            .uId = reinterpret_cast<UINT_PTR>(m_hwnd),
-            .hinst = gHinst,
-            .lpszText = &m_description[0]
-        };
-        m_tip.addTool(info);
-        m_tip.activate();
-    }
-public:
-    WindowStyleCheckbox(HWND parent, DWORD style, LPCTSTR text, LPCTSTR description)
-        : Checkbox(parent, text), m_style{ style }, m_text{ text }, m_description{description}, m_tip{gHwnd, {}}
-    {
-        addInfo();
-    }
-
-    WindowStyleCheckbox(HWND parent, DWORD style, LPCTSTR text, int x, int y, int width, int height, LPCTSTR description)
-        : Checkbox(parent, text, x, y, width, height), m_style{ style }, m_description{ description }, m_text{ text }, m_tip{ gHwnd, {} }
-    {
-        addInfo();
-    }
-
-    DWORD getValue() const
-    {
-        return isChecked() ? m_style : 0;
-    }
-
-    friend std::wostream& operator<<(std::wostream& os, WindowStyleCheckbox const& checkbox)
-    {
-        if (checkbox.isChecked())
-            os << checkbox.m_text << L' ';
-        return os;
-    }
-
-    void flash(int times = 3)
-    {
-        while (times--)
-        {
-            setCheck(true);
-            std::this_thread::sleep_for(std::chrono::milliseconds{ 150 });
-            setCheck(false);
-            std::this_thread::sleep_for(std::chrono::milliseconds{ 150 });
-        }
-    }		
-
-    auto flashAsync(int times = 3)
-    {
-        return std::async(
-            std::launch::async,
-            [this, times]() mutable
-            {
-                flash();
-            }
-        );
-    }
-};
-
-template<typename ValueType>
-class DwmAttributeCheckbox : public Checkbox
-{
-    DWORD const m_attribute{};
-    ValueType const m_enableValue;
-    ValueType const m_disableValue;
-public:
-    DwmAttributeCheckbox(HWND parent, LPCTSTR text, int x, int y, int width, int height, DWORD attribute, ValueType enableValue, ValueType disableValue = {})
-		: Checkbox(parent, text, x, y, width, height), m_attribute{ attribute }, m_enableValue{ enableValue }, m_disableValue{disableValue}
-	{
-        onClick([this](HWND)
-        {
-            if (gCreatedWindow)
-            {
-                DwmSetWindowAttribute(gCreatedWindow, m_attribute,
-                    isChecked() ? &m_enableValue : &m_disableValue, sizeof(ValueType));
-            }
-        });
-	}
-};
-
-template<typename ValueType>
-class DwmAttributeRadioButton : public RadioButton
-{
-	DWORD const m_attribute{};
-	ValueType const m_enableValue;
-	ValueType const m_disableValue;
-public:
-    bool isChecked() const
-    {
-        return false;
-    }
-    DwmAttributeRadioButton(HWND parent, LPCTSTR text, int x, int y, int width, int height, DWORD attribute, ValueType enableValue, ValueType disableValue = {})
-        : RadioButton(parent, text, x, y, width, height), m_attribute{ attribute }, m_enableValue{ enableValue }, m_disableValue{ disableValue }
-    {
-		onClick([this](HWND)
-		{
-			if (gCreatedWindow)
-			{
-				DwmSetWindowAttribute(gCreatedWindow, m_attribute,
-					isChecked() ? &m_enableValue : &m_disableValue, sizeof(ValueType));
-			}
-		});
-    }
-};
 
 class Relation
 {
@@ -426,30 +197,7 @@ public:
 
 };
 
-class Slider : public Controls::Trackbar
-{
-public:
-    static inline Handler<HWND, void()> OnThumbPositionChangeHandlers;
 
-    Slider(HWND parent, bool horizontal, int x, int y, int width, int height)
-        : Controls::Trackbar{ parent,
-        static_cast<DWORD>(horizontal ? Controls::Trackbar::Style::Horz : Controls::Trackbar::Style::Vert),
-        x, y, width, height }
-    {
-    }
-	
-	template<typename Handler>
-    void onPositionChange(Handler&& handler)
-    {
-        OnThumbPositionChangeHandlers.add(m_hwnd, std::forward<Handler>(handler));
-    }
-
-    void onPositionChange()
-    {
-        OnThumbPositionChangeHandlers.remove(m_hwnd);
-    }
-
-};
 
 class LayeredWindowAttributes
 {
@@ -625,8 +373,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     gHinst = hInstance;
     gNCmdShow = nCmdShow;
     auto info = Controls::GetVersion();
+	
 	//Ensure that the common control DLL (ComCtl32.dll) is loaded
-    Controls::Init();
+    Init();
 
     Groupbox windowStyles{ gHwnd, L"Window Styles", 0, 0, 500, 2000 };
 
@@ -752,7 +501,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             WNDCLASSEXW wcex{};
             wcex.cbSize = sizeof(WNDCLASSEX);
             wcex.style = CS_HREDRAW | CS_VREDRAW;
-            wcex.lpfnWndProc = WndProc2;
+            wcex.lpfnWndProc = ExampleWindow::WndProc;
             wcex.cbClsExtra = 0;
             wcex.cbWndExtra = 0;
             wcex.hInstance = gHinst;
@@ -951,94 +700,4 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     }
 
     return 0;
-}
-
-static LRESULT OnCommand(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    //switch(wPa)
-    int wmId = LOWORD(wParam);
-    // Parse the menu selections:
-    switch (wmId)
-    {
-        case IDM_ABOUT:
-            DialogBox(gHinst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-            break;
-        case IDM_EXIT:
-            DestroyWindow(hWnd);
-            break;
-        case Controls::Button::Message::Clicked:   ButtonEx::OnClickHandlers.call(HWND(lParam), HWND(lParam)); break;
-        case Controls::Button::Message::Pushed:
-            OutputDebugString(L"Button pushed");
-            break;
-        case Controls::Button::Message::HotItemChange:
-            OutputDebugString(L"Button hot item change");
-            break;
-        default:
-            return DefWindowProc(hWnd, message, wParam, lParam);
-    }
-    return {};
-}
-
-static LRESULT OnPaint(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    PAINTSTRUCT ps;
-    HDC hdc = BeginPaint(hWnd, &ps);
-
-    // TODO: Add any drawing code that uses hdc here...
-
-    EndPaint(hWnd, &ps);
-    return {};
-}
-
-static LRESULT OnDestroy(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    PostQuitMessage(0);
-    return {};
-}
-
-static LRESULT OnHScroll(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    if (LOWORD(wParam) == TB_THUMBTRACK)
-    {
-        Slider::OnThumbPositionChangeHandlers.call(HWND(lParam));
-    }
-    return {};
-}
-
-static LRESULT OnNotify(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    return DefWindowProc(hWnd, message, wParam, lParam);
-}
-
-LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    switch (message)
-    {
-        case WM_COMMAND:    return OnCommand(hWnd, message, wParam, lParam);
-        case WM_PAINT:      return OnPaint(hWnd, message, wParam, lParam);
-        case WM_DESTROY:    return OnDestroy(hWnd, message, wParam, lParam);
-        case WM_HSCROLL:    return OnHScroll(hWnd, message, wParam, lParam);
-        case WM_NOTIFY:     return OnNotify(hWnd, message, wParam, lParam);
-        default:            return DefWindowProc(hWnd, message, wParam, lParam);
-    }
-}
-
-// Message handler for about box.
-INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
-{
-    UNREFERENCED_PARAMETER(lParam);
-    switch (message)
-    {
-        case WM_INITDIALOG:
-            return (INT_PTR)TRUE;
-
-        case WM_COMMAND:
-            if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
-            {
-                EndDialog(hDlg, LOWORD(wParam));
-                return (INT_PTR)TRUE;
-            }
-            break;
-    }
-    return (INT_PTR)FALSE;
 }

@@ -5,3 +5,4 @@
 #include "Controls.Tab.hpp"
 #include "Controls.Tooltip.hpp"
 #include "Controls.Trackbar.hpp"
+#include "UI.Dwm.hpp"

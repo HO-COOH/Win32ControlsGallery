@@ -13,12 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Pages">
+      <UniqueIdentifier>{a4351fd6-2860-43ef-977d-3e29a49b4f1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pages\Window">
+      <UniqueIdentifier>{b0e42cb2-e8a8-4f55-a3f3-430b1b191a99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pages\Button">
+      <UniqueIdentifier>{62beb485-7255-4fb2-a62f-9b51b6f8cfed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ButtonEx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ButtonPage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ControlBase.cpp">
@@ -27,36 +33,48 @@
     <ClCompile Include="ControlExample.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Core.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PageBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SplashScreen.cpp">
+    <ClCompile Include="Gallery.SplashScreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Core.cpp">
+      <Filter>Pages\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonPage.cpp">
+      <Filter>Pages\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="Gallery.MainWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Gallery.Pages.WindowPage.ExampleWindow.cpp">
+      <Filter>Pages\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Gallery.Pages.WindowPage.WindowStyleCheckbox.cpp">
+      <Filter>Pages\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Gallery.Pages.WindowPage.WindowStyleTooltip.cpp">
+      <Filter>Pages\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Gallery.Pages.WindowPage.DwmAttributeRadioButton.cpp">
+      <Filter>Pages\Window</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ButtonEx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ButtonPage.h">
+    <ClInclude Include="Gallery.Button.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ControlBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ControlExample.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="framework.h">
@@ -71,17 +89,47 @@
     <ClInclude Include="Resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SplashScreen.h">
+    <ClInclude Include="Gallery.SplashScreen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WindowStyleDetail.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Core.h">
+      <Filter>Pages\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonPage.h">
+      <Filter>Pages\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowStyleDetail.h">
+      <Filter>Pages\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Handler.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Gallery.MainWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Gallery.Slider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Gallery.Pages.WindowPage.ExampleWindow.h">
+      <Filter>Pages\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Gallery.Pages.WindowPage.WindowStyleCheckbox.h">
+      <Filter>Pages\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Gallery.Pages.WindowPage.WindowStyleTooltip.h">
+      <Filter>Pages\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Gallery.Pages.WindowPage.DwmAttributeCheckbox.h">
+      <Filter>Pages\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Gallery.Pages.WindowPage.DwmAttributeRadioButton.h">
+      <Filter>Pages\Window</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

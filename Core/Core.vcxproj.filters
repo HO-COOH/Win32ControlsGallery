@@ -4,6 +4,12 @@
     <Filter Include="Controls">
       <UniqueIdentifier>{7e268212-db96-45bf-8315-1c4e96bfd096}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{28dd424d-bc99-4a34-9624-35198618ac03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{5e2ca447-6cd8-4c8b-babd-3425cb6a7bc4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controls.Button.hpp">
@@ -23,6 +29,12 @@
     </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.Dwm.hpp">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.Error.hpp">
+      <Filter>Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

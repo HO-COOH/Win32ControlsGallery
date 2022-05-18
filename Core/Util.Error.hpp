@@ -2,6 +2,8 @@
 #include <winerror.h>
 #include <stdexcept>
 #include <optional>
+
+#define UseException
 namespace Util::Error
 {
 	template<typename Exception = std::runtime_error, typename... Args>
@@ -10,7 +12,10 @@ namespace Util::Error
 		if (SUCCEEDED(hr))
 			return;
 		
-		throw Exception{ std::forward<Args>(args)... };
+		if constexpr (sizeof...(args) == 0)
+			throw Exception{ "Some error" };
+		else
+			throw Exception{ std::forward<Args>(args)... };
 	}
 
 	template<typename Ret>
@@ -26,7 +31,7 @@ namespace Util::Error
 }
 
 #ifdef UseException
-#define CheckRet(hr, ...) return Util::Error::ThrowOnError(hr, __VA_ARGS__)
+#define CheckRet(hr, ...) Util::Error::ThrowOnError(hr, __VA_ARGS__)
 #else
 #define CheckRet(hr, ...) return Util::Error::OptionalOnError(hr, __VA_ARGS__)
 #endif

@@ -36,6 +36,12 @@
     <ClInclude Include="Util.Error.hpp">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="UI.hpp">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Flags.hpp">
+      <Filter>Controls</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">

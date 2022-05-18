@@ -1,10 +1,13 @@
 #pragma once
-#include "PageBase.h"
+#include "Gallery.PageBase.h"
 
-class ButtonPage : public PageBase
+namespace Gallery
 {
-	static Content GetSimpleButtonContent();
-public:
-	ButtonPage();
-};
+	class ButtonPage : public PageBase
+	{
+		static Content GetSimpleButtonContent();
+	public:
+		ButtonPage();
+	};
 
+}

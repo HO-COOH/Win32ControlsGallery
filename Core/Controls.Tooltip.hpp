@@ -125,7 +125,7 @@ namespace Controls
     }
     BOOL Tooltip::enumTool(int i, TOOLINFO& info)
     {
-        return sendMessage(TTM_ENUMTOOLS, i, reinterpret_cast<LPARAM>(&info));
+        return static_cast<BOOL>(sendMessage(TTM_ENUMTOOLS, i, reinterpret_cast<LPARAM>(&info)));
     }
     SIZE Tooltip::getBubbleSize(TOOLINFO const& info)
     {
@@ -134,15 +134,15 @@ namespace Controls
     }
     BOOL Tooltip::getCurrentTool(TOOLINFO& info)
     {
-        return sendMessage(TTM_GETCURRENTTOOL, 0, reinterpret_cast<LPARAM>(&info));
+        return static_cast<BOOL>(sendMessage(TTM_GETCURRENTTOOL, 0, reinterpret_cast<LPARAM>(&info)));
     }
     BOOL Tooltip::getCurrentTool()
     {
-        return sendMessage(TTM_GETCURRENTTOOL, 0, NULL);
+        return static_cast<BOOL>(sendMessage(TTM_GETCURRENTTOOL, 0, NULL));
     }
     INT Tooltip::getDelayTime(Delay delayType)
     {
-        return sendMessage(TTM_GETDELAYTIME, static_cast<WPARAM>(delayType), 0);
+        return static_cast<INT>(sendMessage(TTM_GETDELAYTIME, static_cast<WPARAM>(delayType), 0));
     }
     void Tooltip::getMargin(RECT& margin)
     {
@@ -150,7 +150,7 @@ namespace Controls
     }
     INT Tooltip::getMaxTipWidth()
     {
-        return sendMessage(TTM_GETMAXTIPWIDTH, 0, 0);
+        return static_cast<INT>(sendMessage(TTM_GETMAXTIPWIDTH, 0, 0));
     }
 
     void Tooltip::getText(WPARAM count, TOOLINFO& info)
@@ -160,12 +160,12 @@ namespace Controls
 
     COLORREF Tooltip::getTipBkColor()
     {
-        return sendMessage(TTM_GETTIPBKCOLOR, 0, 0);
+        return static_cast<COLORREF>(sendMessage(TTM_GETTIPBKCOLOR, 0, 0));
     }
 
     COLORREF Tooltip::getTipTextColor()
     {
-        return sendMessage(TTM_GETTIPTEXTCOLOR, 0, 0);
+        return static_cast<COLORREF>(sendMessage(TTM_GETTIPTEXTCOLOR, 0, 0));
     }
 
     void Tooltip::getTitle(TTGETTITLE& title)

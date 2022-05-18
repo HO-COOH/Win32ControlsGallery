@@ -22,11 +22,11 @@ namespace Gallery::Pages::WindowPage
         m_tip.activate();
 	}
 	
-    WindowStyleCheckbox::WindowStyleCheckbox(HWND parent, DWORD style, LPCTSTR text, LPCTSTR description) : 
-        Checkbox(parent, text), m_style{ style }, m_text{ text }, m_description{ description }, m_tip{ gHwnd, {} }
-    {
-        addInfo();
-    }
+    //WindowStyleCheckbox::WindowStyleCheckbox(HWND parent, DWORD style, LPCTSTR text, LPCTSTR description) : 
+    //    Checkbox(parent, text), m_style{ style }, m_text{ text }, m_description{ description }, m_tip{ gHwnd, {} }
+    //{
+    //    addInfo();
+    //}
 
     WindowStyleCheckbox::WindowStyleCheckbox(HWND parent, DWORD style, LPCTSTR text, int x, int y, int width, int height, LPCTSTR description) : 
         Checkbox(parent, text, x, y, width, height), m_style{ style }, m_description{ description }, m_text{ text }, m_tip{ gHwnd, {} }

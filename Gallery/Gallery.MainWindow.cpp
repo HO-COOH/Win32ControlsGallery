@@ -3,6 +3,7 @@
 #include "Resource.h"
 #include "Gallery.Button.h"
 #include "Gallery.Slider.h"
+#include "Gallery.Tabs.h"
 
 namespace Gallery
 {
@@ -104,6 +105,16 @@ namespace Gallery
 
     LRESULT MainWindow::OnNotify(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
+        auto const param = reinterpret_cast<NMHDR*>(lParam);
+        if (param)
+        {
+            switch (param->code)
+            {
+                case TCN_SELCHANGE: Tabs::OnSelectionChangeHandlers.call(param->hwndFrom, param); return {};
+                default:
+                    break;
+            }
+        }
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
     INT_PTR MainWindow::About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)

@@ -18,13 +18,11 @@
 #include "Gallery.Pages.WindowPage.DwmAttributeCheckbox.h"
 #include "Gallery.Pages.WindowPage.DwmAttributeRadioButton.h"
 #include "Gallery.Pages.WindowPage.ExampleWindow.h"
+#include "Gallery.RadioButtonGroup.h"
+
 
 using namespace Gallery;
 using namespace Gallery::Pages::WindowPage;
-
-
-#pragma comment(lib, "dwmapi.lib")
-#pragma comment(lib, "UxTheme.lib")
 
 #pragma comment(linker,"\"/manifestdependency:type='win32' \
 name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
@@ -91,12 +89,15 @@ void InitWindow()
 }
 
 
+
+
 void Init()
 {
     SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
     InitWindow();
     Controls::Init();
-    auto v = Controls::GetVersion();
+ 
+
 }
 
 static void Demo()
@@ -463,11 +464,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	DwmAttributeCheckbox ncRightToLeftLayout    { gHwnd, L"NC Right to Left layout", x, height * row++, width, height, DWMWINDOWATTRIBUTE::DWMWA_NONCLIENT_RTL_LAYOUT, TRUE, FALSE };
 	DwmAttributeCheckbox forceIconicPresentation{gHwnd, L"Force iconic representation", x, height * row++, width, height, DWMWINDOWATTRIBUTE::DWMWA_FORCE_ICONIC_REPRESENTATION, TRUE, FALSE};
 	DwmAttributeCheckbox hasIconicBitmap        {gHwnd, L"Has iconic bitmap", x, height * row++, width, height, DWMWINDOWATTRIBUTE::DWMWA_HAS_ICONIC_BITMAP, TRUE, FALSE};
-    std::array flip3D
+    RadioButtonGroup flip3D
     {
-        DwmAttributeRadioButton{gHwnd, L"DWMFLIP3D_DEFAULT",        x + 50, height * row++, width, height, DWMWA_FLIP3D_POLICY, DWMFLIP3DWINDOWPOLICY::DWMFLIP3D_DEFAULT},
-        DwmAttributeRadioButton{gHwnd, L"DWMFLIP3D_EXCLUDEBELOW",   x + 50, height * row++, width, height, DWMWA_FLIP3D_POLICY, DWMFLIP3DWINDOWPOLICY::DWMFLIP3D_EXCLUDEBELOW},
-        DwmAttributeRadioButton{gHwnd, L"DWMFLIP3D_EXCLUDEABOVE",   x + 50, height * row++, width, height, DWMWA_FLIP3D_POLICY, DWMFLIP3DWINDOWPOLICY::DWMFLIP3D_EXCLUDEABOVE},
+        {
+            DwmAttributeRadioButton{gHwnd, L"DWMFLIP3D_DEFAULT",        x + 50, height * row++, width, height, DWMWA_FLIP3D_POLICY, DWMFLIP3DWINDOWPOLICY::DWMFLIP3D_DEFAULT},
+            DwmAttributeRadioButton{gHwnd, L"DWMFLIP3D_EXCLUDEBELOW",   x + 50, height * row++, width, height, DWMWA_FLIP3D_POLICY, DWMFLIP3DWINDOWPOLICY::DWMFLIP3D_EXCLUDEBELOW},
+            DwmAttributeRadioButton{gHwnd, L"DWMFLIP3D_EXCLUDEABOVE",   x + 50, height * row++, width, height, DWMWA_FLIP3D_POLICY, DWMFLIP3DWINDOWPOLICY::DWMFLIP3D_EXCLUDEABOVE},
+        }
     };
 	DwmAttributeCheckbox disallowPeek           {gHwnd, L"Disallow peek", x, height * row++, width, height, DWMWINDOWATTRIBUTE::DWMWA_DISALLOW_PEEK, TRUE, FALSE};
 	DwmAttributeCheckbox excludedFromPeek       {gHwnd, L"Excluded from peek", x, height * row++, width, height, DWMWINDOWATTRIBUTE::DWMWA_EXCLUDED_FROM_PEEK, TRUE, FALSE};
@@ -680,6 +683,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 OutputDebugString(L"Close window");
             }
         });
+
 
     
     UNREFERENCED_PARAMETER(hPrevInstance);

@@ -7,7 +7,8 @@ namespace Gallery::Pages::WindowPage
 {
     LRESULT ExampleWindow::OnNCCalcSize(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
-        return 0;
+        //return 0;
+        return DefWindowProc(hWnd, message, wParam, lParam);
     }
 
     LRESULT ExampleWindow::OnPaint(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

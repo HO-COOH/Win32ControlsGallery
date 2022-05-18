@@ -54,3 +54,35 @@ public:
             handler(std::forward<Args>(args)...);
     }
 };
+
+#include <unordered_set>
+#include <cassert>
+template<typename Identifier, typename Function>
+class StaticHandler
+{
+    std::unordered_set<Identifier> m_objects;
+    Function m_handler;
+public:
+	
+    StaticHandler(Function&& function) : m_handler{ std::forward<Function>(function) }
+    {
+    }
+
+	template<typename Handler>
+    void add(Identifier id, Handler&& handler)
+    {
+        assert(!m_objects.contains(id));
+        m_objects.emplace(id);
+    }
+
+    void remove(Identifier id)
+    {
+        m_objects.erase(id);
+    }
+
+    template<typename Identifier, typename ... Args>
+    void call(Identifier id, Args&& ... args)
+    {
+        std::invoke(m_handler, std::forward<Args>(args)...);
+    }
+};

@@ -31,17 +31,7 @@ namespace Gallery
         }
     };
 
-    class RadioButton : public ButtonEx
-    {
-    public:
-        RadioButton(HWND parent, LPCTSTR text, int x, int y, int width, int height)
-            : ButtonEx(parent, static_cast<DWORD>(Controls::Button::Style::RadioButton), x, y, width, height)
-        {
-            setText(text);
-        }
-    };
-
-    class Checkbox : public ButtonEx
+    class CheckableButton : public ButtonEx
     {
         bool m_checked{};
 
@@ -53,22 +43,13 @@ namespace Gallery
                     Button_SetCheck(hwnd, m_checked);
                 });
         }
-
     public:
-        Checkbox(HWND parent, LPCTSTR text)
-            : ButtonEx(parent, static_cast<DWORD>(Controls::Button::Style::Checkbox))
-        {
-            setText(text);
-            addHandler();
-        }
-
-        Checkbox(HWND parent, LPCTSTR text, int x, int y, int width, int height)
-            : ButtonEx(parent, static_cast<DWORD>(Controls::Button::Style::Checkbox), x, y, width, height)
-        {
-            setText(text);
-            addHandler();
-        }
-
+        CheckableButton(HWND parent, DWORD style, int x, int y, int width, int height)
+			: ButtonEx(parent, style, x, y, width, height)
+		{
+			addHandler();
+		}
+		
         bool isChecked() const
         {
             return m_checked;
@@ -76,20 +57,46 @@ namespace Gallery
 
         void setCheck(bool check)
         {
-            m_checked = check;
-            ButtonEx::setCheck(check);
+            OnClickHandlers.call(m_hwnd, m_hwnd);
+        }
+
+        void setCheckNoop(bool check)
+        {
+			m_checked = check;
+			Button_SetCheck(m_hwnd, m_checked);
         }
 
         template<typename Handler>
         void onClick(Handler&& handler)
         {
             OnClickHandlers.remove(m_hwnd);
-            OnClickHandlers.add(m_hwnd, [handler, this](HWND hwnd)
+            OnClickHandlers.add(m_hwnd, [handler, this](HWND hwnd) mutable
                 {
                     m_checked = !m_checked;
                     Button_SetCheck(hwnd, m_checked);
                     handler(hwnd);
                 });
+        }
+    };
+
+    class RadioButton : public CheckableButton
+    {
+    public:
+        RadioButton(HWND parent, LPCTSTR text, int x, int y, int width, int height)
+            : CheckableButton(parent, static_cast<DWORD>(Controls::Button::Style::RadioButton), x, y, width, height)
+        {
+            setText(text);
+        }
+    };
+
+    class Checkbox : public CheckableButton
+    {
+    public:
+
+        Checkbox(HWND parent, LPCTSTR text, int x, int y, int width, int height)
+            : CheckableButton(parent, static_cast<DWORD>(Controls::Button::Style::Checkbox), x, y, width, height)
+        {
+            setText(text);
         }
     };
 

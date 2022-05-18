@@ -2,6 +2,7 @@
 #include "Gallery.SplashScreen.h"
 #include <Uxtheme.h>
 #include <dwmapi.h>
+#include <UI.Dwm.hpp>
 
 #pragma comment(lib, "Msimg32.lib")
 #pragma comment(lib, "UxTheme.lib")
@@ -15,17 +16,8 @@ namespace Gallery
 
     static HBRUSH GetSystemColorBrush()
     {
-        DWORD color{};
-        BOOL _{};
-        DwmGetColorizationColor(&color, &_);
-
-        auto const r = (color & (0x00FF0000)) >> 16;
-        auto const g = (color & (0x0000FF00)) >> 8;
-        auto const b = color & (0x000000FF);
-
-        OutputDebugString(L"here");
-
-        return CreateSolidBrush(RGB(r, g, b));
+        auto const color = UI::Dwm::GetColorizationColor();
+        return CreateSolidBrush(RGB(color.r, color.g, color.b));
     }
     static LRESULT OnWMPaint(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {

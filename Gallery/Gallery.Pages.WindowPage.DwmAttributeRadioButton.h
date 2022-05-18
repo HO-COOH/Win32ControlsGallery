@@ -9,10 +9,6 @@ namespace Gallery::Pages::WindowPage
 		ValueType const m_enableValue;
 		ValueType const m_disableValue;
 	public:
-		bool isChecked() const
-		{
-			return false;
-		}
 		
 		DwmAttributeRadioButton(HWND parent, LPCTSTR text, int x, int y, int width, int height, DWORD attribute, ValueType enableValue, ValueType disableValue = {})
 			: RadioButton(parent, text, x, y, width, height), m_attribute{ attribute }, m_enableValue{ enableValue }, m_disableValue{ disableValue }

@@ -36,7 +36,7 @@
     <ClCompile Include="Graphics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PageBase.cpp">
+    <ClCompile Include="Gallery.PageBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Gallery.SplashScreen.cpp">
@@ -66,6 +66,12 @@
     <ClCompile Include="Gallery.Pages.WindowPage.DwmAttributeRadioButton.cpp">
       <Filter>Pages\Window</Filter>
     </ClCompile>
+    <ClCompile Include="Gallery.RadioButtonGroup.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Gallery.Tabs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Gallery.Button.h">
@@ -83,7 +89,7 @@
     <ClInclude Include="Graphics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PageBase.h">
+    <ClInclude Include="Gallery.PageBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
@@ -131,6 +137,15 @@
     <ClInclude Include="Gallery.Pages.WindowPage.DwmAttributeRadioButton.h">
       <Filter>Pages\Window</Filter>
     </ClInclude>
+    <ClInclude Include="Gallery.RadioButtonGroup.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Gallery.Tabs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Gallery.WinRTInterop.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Core.ico">
@@ -150,5 +165,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="app.manifest" />
   </ItemGroup>
 </Project>

@@ -148,8 +148,10 @@
     <ClInclude Include="Controls.Tab.hpp" />
     <ClInclude Include="Controls.Tooltip.hpp" />
     <ClInclude Include="Controls.Trackbar.hpp" />
+    <ClInclude Include="Flags.hpp" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="UI.Dwm.hpp" />
+    <ClInclude Include="UI.hpp" />
     <ClInclude Include="Util.Error.hpp" />
   </ItemGroup>
   <ItemGroup>

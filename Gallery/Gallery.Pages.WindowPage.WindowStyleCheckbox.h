@@ -14,7 +14,7 @@ namespace Gallery::Pages::WindowPage
         WindowStyleTooltip m_tip;
         void addInfo();
     public:
-        WindowStyleCheckbox(HWND parent, DWORD style, LPCTSTR text, LPCTSTR description);
+        //WindowStyleCheckbox() :Checkbox(NULL, nullptr, 0, 0, 0, 0), m_tip{ NULL, {} } { assert(false); } JUST FOR DEBUG
         WindowStyleCheckbox(HWND parent, DWORD style, LPCTSTR text, int x, int y, int width, int height, LPCTSTR description);
 
         DWORD getValue() const;

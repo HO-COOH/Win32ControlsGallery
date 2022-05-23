@@ -152,6 +152,7 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="UI.Dwm.hpp" />
     <ClInclude Include="UI.hpp" />
+    <ClInclude Include="UI.Window.hpp" />
     <ClInclude Include="Util.Error.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -159,6 +160,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Util.System.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -10,7 +10,8 @@ public:
     template<typename Handler>
     void add(Identifier id, Handler&& handler)
     {
-        m_handlers.emplace(id, std::forward<Handler>(handler));
+        //m_handlers.emplace(id, std::forward<Handler>(handler));
+        m_handlers[id] = std::move(handler);
     }
 
     void remove(Identifier id)

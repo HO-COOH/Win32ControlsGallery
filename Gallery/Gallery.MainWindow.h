@@ -1,5 +1,6 @@
 #pragma once
-
+#include <vector>
+#include <functional>
 namespace Gallery
 {
     class MainWindow
@@ -15,7 +16,11 @@ namespace Gallery
         static LRESULT OnDestroy(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
         static LRESULT OnHScroll(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
         static LRESULT OnNotify(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+        static LRESULT OnSize(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+        static LRESULT OnSizing(HWND hwnd, UINT message, WPARAM wParam, LPARAM lparam);
         static INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
+
+        static std::vector<std::function<void()>> OnSizeHandler;
     };
 
 }

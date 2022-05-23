@@ -9,13 +9,21 @@ For more "galleries", visit:
 The library is written in layers.
 
 ### Core
-Core layer is a thin, object-oriented wrapper around the [Common Win32 controls](https://docs.microsoft.com/en-us/windows/win32/controls/window-controls).
+Core layer is a thin, object-oriented, *header-only* wrapper around the [Common Win32 controls](https://docs.microsoft.com/en-us/windows/win32/controls/window-controls).
 The controls are objects under `namespace Controls`. 
 Current controls:
 |Controls|Objects|
 |---|---|
 |[Tab](https://docs.microsoft.com/en-us/windows/win32/controls/tab-control-reference) |`Controls::Tab`
 |[Button](https://docs.microsoft.com/en-us/windows/win32/controls/buttons) |`Controls::Button`
+
+Also thin wrapper around common Win32 APIs
+- `namespace UI`
+    + `namespace UI::Dwm`
+    + `namespace UI::Window`
+- `namespace Util`
+    + `namespace Util::Error`
+    + `namespace Util::System`
 
 #### Porting from old code
 | Old code | New code| Example
@@ -45,6 +53,7 @@ Built on top of the core layer, the framework layers provides a higher-level, de
   + `WS_EX_` extended window styles
   + DWM attributes
   + custom rendering
+![](assets/Window.png)
 
 ## Build
 ### Linking

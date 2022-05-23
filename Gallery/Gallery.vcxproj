@@ -22,19 +22,21 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ButtonEx.cpp" />
-    <ClCompile Include="ButtonPage.cpp" />
+    <ClCompile Include="Gallery.Pages.ButtonPage.Page.cpp" />
     <ClCompile Include="ControlBase.cpp" />
     <ClCompile Include="ControlExample.cpp" />
-    <ClCompile Include="Core.cpp" />
+    <ClCompile Include="Gallery.Pages.WindowPage.Page.cpp" />
     <ClCompile Include="Gallery.MainWindow.cpp" />
     <ClCompile Include="Gallery.Pages.WindowPage.DwmAttributeRadioButton.cpp" />
     <ClCompile Include="Gallery.Pages.WindowPage.ExampleWindow.cpp" />
+    <ClCompile Include="Gallery.Pages.WindowPage.WindowStyleAssist.cpp" />
     <ClCompile Include="Gallery.Pages.WindowPage.WindowStyleCheckbox.cpp" />
     <ClCompile Include="Gallery.Pages.WindowPage.WindowStyleTooltip.cpp" />
     <ClCompile Include="Gallery.RadioButtonGroup.cpp" />
     <ClCompile Include="Gallery.Tabs.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Gallery.PageBase.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
@@ -45,15 +47,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Gallery.Button.h" />
-    <ClInclude Include="ButtonPage.h" />
+    <ClInclude Include="Gallery.Pages.ButtonPage.Page.h" />
     <ClInclude Include="ControlBase.h" />
     <ClInclude Include="ControlExample.h" />
-    <ClInclude Include="Core.h" />
+    <ClInclude Include="Gallery.Pages.WindowPage.Page.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Gallery.MainWindow.h" />
     <ClInclude Include="Gallery.Pages.WindowPage.DwmAttributeCheckbox.h" />
     <ClInclude Include="Gallery.Pages.WindowPage.DwmAttributeRadioButton.h" />
     <ClInclude Include="Gallery.Pages.WindowPage.ExampleWindow.h" />
+    <ClInclude Include="Gallery.Pages.WindowPage.WindowStyleAssist.h" />
     <ClInclude Include="Gallery.Pages.WindowPage.WindowStyleCheckbox.h" />
     <ClInclude Include="Gallery.Pages.WindowPage.WindowStyleTooltip.h" />
     <ClInclude Include="Gallery.RadioButtonGroup.h" />

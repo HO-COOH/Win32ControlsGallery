@@ -6,8 +6,13 @@ namespace Gallery
 	class ButtonPage : public PageBase
 	{
 		static Content GetSimpleButtonContent();
+		
 	public:
 		ButtonPage();
+
+		// Inherited via PageBase
+		virtual void hide() override;
+		virtual void show() override;
 	};
 
 }

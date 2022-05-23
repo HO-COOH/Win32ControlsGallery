@@ -175,17 +175,17 @@ namespace Controls
 
     INT Tooltip::getToolCount()
     {
-        return sendMessage(TTM_GETTOOLCOUNT, 0, 0);
+        return static_cast<INT>(sendMessage(TTM_GETTOOLCOUNT, 0, 0));
     }
 
     BOOL Tooltip::getToolInfo(TOOLINFO& toolInfo)
     {
-        return sendMessage(TTM_GETTOOLINFO, 0, reinterpret_cast<LPARAM>(&toolInfo));
+        return static_cast<BOOL>(sendMessage(TTM_GETTOOLINFO, 0, reinterpret_cast<LPARAM>(&toolInfo)));
     }
 
     BOOL Tooltip::hitTest(TTHITTESTINFO const& info)
     {
-        return sendMessage(TTM_HITTEST, 0, reinterpret_cast<LPARAM>(&info));
+        return static_cast<BOOL>(sendMessage(TTM_HITTEST, 0, reinterpret_cast<LPARAM>(&info)));
     }
 
     void Tooltip::newToolRect(TOOLINFO const& info)
@@ -221,7 +221,7 @@ namespace Controls
 
     int Tooltip::setMaxTipWidth(int maxWidth)
     {
-        return sendMessage(TTM_SETMAXTIPWIDTH, 0, maxWidth);
+        return static_cast<int>(sendMessage(TTM_SETMAXTIPWIDTH, 0, maxWidth));
     }
 
     void Tooltip::setTipBkColor(COLORREF backgroundColor)
@@ -236,9 +236,9 @@ namespace Controls
 
     BOOL Tooltip::setTitle(Icon icon, LPCTSTR title)
     {
-        return sendMessage(TTM_SETTITLE,
-            static_cast<WPARAM>(icon),
-            reinterpret_cast<LPARAM>(title));
+        return static_cast<BOOL>(sendMessage(
+            TTM_SETTITLE, static_cast<WPARAM>(icon),
+            reinterpret_cast<LPARAM>(title)));
     }
 
     void Tooltip::setToolInfo(TOOLINFO const& info)

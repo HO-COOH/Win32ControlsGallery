@@ -47,6 +47,8 @@ namespace Gallery
             case WM_DESTROY:    return OnDestroy(hWnd, message, wParam, lParam);
             case WM_HSCROLL:    return OnHScroll(hWnd, message, wParam, lParam);
             case WM_NOTIFY:     return OnNotify(hWnd, message, wParam, lParam);
+            case WM_SIZE:       return OnSize(hWnd, message, wParam, lParam);
+            case WM_SIZING:     return OnSizing(hWnd, message, wParam, lParam);
             default:            return DefWindowProc(hWnd, message, wParam, lParam);
         }
 	}
@@ -117,6 +119,16 @@ namespace Gallery
         }
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
+    LRESULT MainWindow::OnSize(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+    {
+        for (auto& handler : OnSizeHandler)
+            handler();
+        return {};
+    }
+    LRESULT MainWindow::OnSizing(HWND hwnd, UINT message, WPARAM wParam, LPARAM lparam)
+    {
+        return DefWindowProc(hwnd, message, wParam, lparam);
+    }
     INT_PTR MainWindow::About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     {
         // Message handler for about box.
@@ -138,4 +150,6 @@ namespace Gallery
         return (INT_PTR)FALSE;
 
     }
+
+    std::vector<std::function<void()>> MainWindow::OnSizeHandler;
 }

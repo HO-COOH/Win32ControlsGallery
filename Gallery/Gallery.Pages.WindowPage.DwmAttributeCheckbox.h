@@ -1,7 +1,8 @@
 #pragma once
 #include "Gallery.Button.h"
+#include "Gallery.Pages.WindowPage.ExampleWindow.h"
 
-extern HWND gCreatedWindow;
+extern Gallery::Pages::WindowPage::ExampleWindow gCreatedWindow;
 namespace Gallery::Pages::WindowPage
 {
     template<typename ValueType>

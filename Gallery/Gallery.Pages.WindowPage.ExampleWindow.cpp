@@ -3,8 +3,40 @@
 #include <WinUser.h>
 #include <wingdi.h>
 
+
 namespace Gallery::Pages::WindowPage
 {
+    void ExampleWindow::Register()
+    {
+        static bool registered = false;
+   	    
+        if (registered)
+            return;
+		
+        WNDCLASSEXW wcex{};
+        wcex.cbSize = sizeof(WNDCLASSEX);
+        wcex.style = CS_HREDRAW | CS_VREDRAW;
+        wcex.lpfnWndProc = ExampleWindow::WndProc;
+        wcex.cbClsExtra = 0;
+        wcex.cbWndExtra = 0;
+        wcex.hInstance = gHinst;
+        wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+        wcex.lpszClassName = className;
+        wcex.hIconSm = NULL;
+   		RegisterClassExW(&wcex);
+   		registered = true;
+    }
+    void ExampleWindow::create(DWORD extendedStyle, DWORD style, std::wstringstream const& os)
+    {
+        Register();
+        m_hwnd = CreateWindowEx(extendedStyle, className, os.str().c_str(),
+        style, 1000, 1000, 800, 600, nullptr, nullptr, gHinst, nullptr);
+    }
+    ExampleWindow& ExampleWindow::operator=(HWND hwnd)
+    {
+        UI::Window::operator=(hwnd);
+        return *this;
+    }
     LRESULT ExampleWindow::OnNCCalcSize(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         //return 0;

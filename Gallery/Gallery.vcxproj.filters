@@ -45,10 +45,10 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Core.cpp">
+    <ClCompile Include="Gallery.Pages.WindowPage.Page.cpp">
       <Filter>Pages\Window</Filter>
     </ClCompile>
-    <ClCompile Include="ButtonPage.cpp">
+    <ClCompile Include="Gallery.Pages.ButtonPage.Page.cpp">
       <Filter>Pages\Button</Filter>
     </ClCompile>
     <ClCompile Include="Gallery.MainWindow.cpp">
@@ -70,6 +70,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Gallery.Tabs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Gallery.Pages.WindowPage.WindowStyleAssist.cpp">
+      <Filter>Pages\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -104,10 +110,10 @@
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Core.h">
+    <ClInclude Include="Gallery.Pages.WindowPage.Page.h">
       <Filter>Pages\Window</Filter>
     </ClInclude>
-    <ClInclude Include="ButtonPage.h">
+    <ClInclude Include="Gallery.Pages.ButtonPage.Page.h">
       <Filter>Pages\Button</Filter>
     </ClInclude>
     <ClInclude Include="WindowStyleDetail.h">
@@ -145,6 +151,9 @@
     </ClInclude>
     <ClInclude Include="Gallery.WinRTInterop.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Gallery.Pages.WindowPage.WindowStyleAssist.h">
+      <Filter>Pages\Window</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

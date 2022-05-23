@@ -2,6 +2,8 @@
 #include "Util.Error.hpp"
 #include "UI.hpp"
 #include <dwmapi.h>
+#include "Util.System.hpp"
+#include <cassert>
 
 namespace UI::Dwm
 {
@@ -18,30 +20,42 @@ namespace UI::Dwm
 		CheckRet(DwmGetWindowAttribute(hwnd, attribute, &value, sizeof(value)), value);
 	}
 
+	struct ColorizationColor : public Color
+	{
+		BOOL opaque;
+	};
+
 	inline auto GetColorizationColor()
 	{
 		DWORD color{};
-		BOOL _{};
-		CheckRet(DwmGetColorizationColor(&color, &_));
-		return Color
+		BOOL opaque{};
+		CheckRet(DwmGetColorizationColor(&color, &opaque));
+		return ColorizationColor
 		{
-			.r = static_cast<BYTE>((color & (0x00FF0000)) >> 16),
-			.g = static_cast<BYTE>((color & (0x0000FF00)) >> 8),
-			.b = static_cast<BYTE>(color & 0x000000FF),
-			.a = static_cast<BYTE>((color & (0xFF000000)) >> 24)
+			static_cast<BYTE>((color & (0x00FF0000)) >> 16),
+			static_cast<BYTE>((color & (0x0000FF00)) >> 8),
+			static_cast<BYTE>(color & 0x000000FF),
+			static_cast<BYTE>((color & (0xFF000000)) >> 24),
+			opaque
 		};
 	}
 
-	inline auto GetColorizationColor(BOOL& opaque)
+	inline void EnableBlurBehindWindow(HWND hwnd, DWM_BLURBEHIND const& blurData)
 	{
-		DWORD color{};
-		CheckRet(DwmGetColorizationColor(&color, &opaque));
-		return Color
-		{
-			.r = static_cast<BYTE>((color & (0x00FF0000)) >> 16),
-			.g = static_cast<BYTE>((color & (0x0000FF00)) >> 8),
-			.b = static_cast<BYTE>(color & 0x000000FF),
-			.a = static_cast<BYTE>((color & (0xFF000000)) >> 24)
-		};
+		CheckRet(DwmEnableBlurBehindWindow(hwnd, &blurData));
+	}
+
+	inline void EnableComposition()
+	{
+		//assert(!IsWindowsVersion8OrGreater());
+		#pragma warning(disable: 4995)
+		CheckRet(DwmEnableComposition(DWM_EC_ENABLECOMPOSITION));
+	}
+
+	inline void DisableComposition()
+	{
+		//assert(!IsWindowsVersion8OrGreater());
+		#pragma warning(disable: 4995)
+		CheckRet(DwmEnableComposition(DWM_EC_DISABLECOMPOSITION));
 	}
 }

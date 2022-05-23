@@ -42,10 +42,18 @@
     <ClInclude Include="Flags.hpp">
       <Filter>Controls</Filter>
     </ClInclude>
+    <ClInclude Include="UI.Window.hpp">
+      <Filter>UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
       <Filter>Controls</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Util.System.hpp">
+      <Filter>Util</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -55,7 +55,7 @@ namespace Controls
 
 	int Trackbar::getPos()
 	{
-		return sendMessage(TBM_GETPOS, 0, 0);
+		return static_cast<int>(sendMessage(TBM_GETPOS, 0, 0));
 	}
 
 	void Trackbar::setPos(bool redraw, int position)

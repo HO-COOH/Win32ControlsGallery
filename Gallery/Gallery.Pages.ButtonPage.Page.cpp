@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "ButtonPage.h"
+#include "Gallery.Pages.ButtonPage.Page.h"
 #include "Gallery.Button.h"
 
 namespace Gallery
@@ -14,13 +14,16 @@ namespace Gallery
 		return{};
 	}
 
-	ButtonPage::ButtonPage()
+	ButtonPage::ButtonPage() : PageBase{L"Button"}
 	{
-		//A simple button
-		ControlExample simpleButtonExample;
-		simpleButtonExample.setHeaderText("A simple button with text");
-		simpleButtonExample.setContent(GetSimpleButtonContent());
-		//addExample(std::move(simpleButtonExample));
+	}
+
+	void ButtonPage::hide()
+	{
+	}
+
+	void ButtonPage::show()
+	{
 	}
 
 }

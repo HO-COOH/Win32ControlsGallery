@@ -111,7 +111,7 @@ namespace Gallery
             std::this_thread::sleep_for(std::chrono::seconds{ 3 });
             while (opacaity >= 0)
             {
-                SetLayeredWindowAttributes(thisPtr->m_hwnd, 0, opacaity, LWA_ALPHA);
+                SetLayeredWindowAttributes(thisPtr->m_hwnd, 0, static_cast<BYTE>(opacaity), LWA_ALPHA);
                 std::this_thread::sleep_for(std::chrono::milliseconds{ 10 });
                 opacaity -= 15;
                 if (opacaity <= 200 && thisPtr->m_onFinish)

@@ -11,8 +11,8 @@ namespace Controls
 	public:
 		inline Tab(HWND parent);
 
-		inline void addTab(TCITEM const& item);
-		inline void addTab(LPCTSTR text);
+		inline void addTab(int index, TCITEM const& item);
+		inline void addTab(int index, LPCTSTR text);
 
 		//methods
 		inline void adjustRect(BOOL larger, RECT& rect);
@@ -63,12 +63,12 @@ namespace Controls
 
     }
 
-    void Tab::addTab(TCITEM const& item)
+    void Tab::addTab(int index, TCITEM const& item)
     {
-        TabCtrl_InsertItem(m_hwnd, 0, &item);
+        TabCtrl_InsertItem(m_hwnd, index, &item);
     }
 
-    void Tab::addTab(LPCTSTR text)
+    void Tab::addTab(int index, LPCTSTR text)
     {
         TCITEM item
         {
@@ -76,7 +76,7 @@ namespace Controls
             .pszText = const_cast<LPTSTR>(text),
             .cchTextMax = static_cast<int>(StringLength(text))
         };
-        addTab(item);
+        addTab(index, item);
     }
 
     void Tab::adjustRect(BOOL larger, RECT& rect)

@@ -4,6 +4,9 @@ namespace UI
 {
 	struct Color
 	{
-		BYTE r{}, g{}, b{}, a{};
+		BYTE r;
+		BYTE g;
+		BYTE b;
+		BYTE a;
 	};
 }

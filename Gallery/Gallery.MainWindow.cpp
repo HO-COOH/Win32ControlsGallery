@@ -82,7 +82,7 @@ namespace Gallery
     LRESULT MainWindow::OnPaint(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         PAINTSTRUCT ps;
-        HDC hdc = BeginPaint(hWnd, &ps);
+        [[maybe_unused]]HDC hdc = BeginPaint(hWnd, &ps);
 
         // TODO: Add any drawing code that uses hdc here...
 
@@ -98,7 +98,8 @@ namespace Gallery
 
     LRESULT MainWindow::OnHScroll(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
-        if (LOWORD(wParam) == TB_THUMBTRACK)
+        auto const loWord = LOWORD(wParam);
+        if (loWord == TB_THUMBTRACK || loWord == TB_LINEUP || loWord == TB_LINEDOWN || loWord == TB_PAGEUP || loWord == TB_PAGEDOWN)
         {
             Slider::OnThumbPositionChangeHandlers.call(HWND(lParam));
         }
@@ -113,6 +114,7 @@ namespace Gallery
             switch (param->code)
             {
                 case TCN_SELCHANGE: Tabs::OnSelectionChangeHandlers.call(param->hwndFrom, param); return {};
+                case TRBN_THUMBPOSCHANGING: Slider::OnThumbPositionChangeHandlers.call(param->hwndFrom); return {};
                 default:
                     break;
             }

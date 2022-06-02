@@ -7,19 +7,21 @@
 #include "Gallery.Tabs.h"
 #include "Gallery.Pages.WindowPage.Page.h"
 #include "Gallery.Pages.ButtonPage.Page.h"
+#include "Gallery.Pages.ShellPage.Page.h"
+#include "Gallery.Pages.WinUIPage.Page.h"
 
 
 using namespace Gallery;
-using namespace Gallery::Pages::WindowPage;
 
 
-#pragma comment(linker,"\"/manifestdependency:type='win32' \
-name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
-processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+
+//#pragma comment(linker,"\"/manifestdependency:type='win32' \
+//name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
+//processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
 HINSTANCE gHinst;
 HWND gHwnd;
-ExampleWindow gCreatedWindow;
+Gallery::Pages::WindowPage::ExampleWindow gCreatedWindow;
 static int gNCmdShow;
 #define MAX_LOADSTRING 100
 
@@ -104,8 +106,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 
     Tabs tab{ gHwnd };
-    tab += std::make_unique<Page>(tab.getContainerWindow());
-    tab += std::make_unique<ButtonPage>();
+    tab += std::make_unique<Gallery::Pages::WindowPage::Page>(tab.getContainerWindow());
+    tab += std::make_unique<Gallery::Pages::ButtonPage::Page>(tab.getContainerWindow());
+	tab += std::make_unique<Gallery::Pages::ShellPage::Page>(tab.getContainerWindow());
+	tab += std::make_unique<Gallery::Pages::WinUIPage::Page>(tab.getContainerWindow());
+	tab.show();
+	
 
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);

@@ -1,6 +1,7 @@
 #pragma once
 #include <unordered_map>
 #include <functional>
+#include <cassert>
 
 template<typename Identifier, typename Function>
 class Handler
@@ -16,7 +17,12 @@ public:
 
     void remove(Identifier id)
     {
-        m_handlers.erase(id);
+        assert(m_handlers.erase(id) == 1);
+    }
+
+    auto& get(Identifier id)
+    {
+        return m_handlers.at(id);
     }
 
     template<typename Identifier, typename ... Args>

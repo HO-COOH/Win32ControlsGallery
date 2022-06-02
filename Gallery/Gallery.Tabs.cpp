@@ -32,16 +32,19 @@ namespace Gallery
         WNDCLASSEXW wcex;
         wcex.cbSize = sizeof(WNDCLASSEX);
         wcex.style = CS_HREDRAW | CS_VREDRAW;
-        wcex.lpfnWndProc = +[](HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
+        wcex.lpfnWndProc = reinterpret_cast<WNDPROC>(+[](HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)->LRESULT
         { 
             switch (message)
             {
                 case WM_NOTIFY:
                 case WM_COMMAND:
                     return MainWindow::WndProc(hWnd, message, wParam, lParam);
+                case WM_HSCROLL:
+					if(auto const loWord = LOWORD(wParam); loWord == TB_THUMBTRACK || loWord == TB_LINEUP || loWord == TB_LINEDOWN || loWord == TB_PAGEUP || loWord == TB_PAGEDOWN)
+                        return MainWindow::WndProc(hWnd, message, wParam, lParam);
             }
             return DefWindowProc(hWnd, message, wParam, lParam); 
-        };
+        });
         wcex.cbClsExtra = 0;
         wcex.cbWndExtra = 0;
         wcex.hInstance = gHinst;
@@ -78,8 +81,13 @@ namespace Gallery
         addTab(m_pages.size() - 1, m_pages.back()->getName().data());
         m_currentShowingPage = m_pages.size() - 1;
 		
-        m_pages.back()->show();
+        m_pages.back()->hide();
         return *this;
+    }
+    void Tabs::show()
+    {
+        if (!m_pages.empty())
+            m_pages.back()->show();
     }
     std::unique_ptr<PageBase>& Tabs::getCurrentShowingPage()
     {

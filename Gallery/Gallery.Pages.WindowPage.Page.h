@@ -2,7 +2,7 @@
 
 #include "resource.h"
 
-#include "Gallery.PageBase.h"
+#include "Gallery.TabPageBase.h"
 #include "Gallery.Pages.WindowPage.WindowStyleCheckbox.h"
 #include "Gallery.Slider.h"
 #include "Gallery.Pages.WindowPage.DwmAttributeCheckbox.h"
@@ -16,10 +16,8 @@ void Init();
 
 namespace Gallery::Pages::WindowPage
 {
-	class Page : public PageBase
+	class Page : public TabPageBase
 	{
-		HWND m_container;
-
 		Groupbox windowStyles;
 		WindowStyleCheckbox border;
 		WindowStyleCheckbox caption;

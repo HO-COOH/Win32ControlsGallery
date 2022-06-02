@@ -24,7 +24,7 @@ namespace Util::Error
 		return SUCCEEDED(hr) ? std::optional<Ret>{value} : std::optional<Ret>{};
 	}
 
-	void OptionalOnError(HRESULT hr)
+	inline void OptionalOnError(HRESULT hr)
 	{
 		return;
 	}

@@ -13,6 +13,11 @@ namespace Gallery::Pages::WindowPage
 		DwmAttributeRadioButton(HWND parent, LPCTSTR text, int x, int y, int width, int height, DWORD attribute, ValueType enableValue, ValueType disableValue = {})
 			: RadioButton(parent, text, x, y, width, height), m_attribute{ attribute }, m_enableValue{ enableValue }, m_disableValue{ disableValue }
 		{
+
+		}
+
+		void addHandler()
+		{
 			onClick([this](HWND)
 			{
 				if (gCreatedWindow)

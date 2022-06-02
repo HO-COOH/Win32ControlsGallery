@@ -3,6 +3,7 @@
 #include <WinUser.h>
 #include <wingdi.h>
 
+extern HINSTANCE gHinst;
 
 namespace Gallery::Pages::WindowPage
 {

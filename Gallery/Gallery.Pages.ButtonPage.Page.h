@@ -1,14 +1,14 @@
 #pragma once
-#include "Gallery.PageBase.h"
+#include "Gallery.TabPageBase.h"
 
-namespace Gallery
+namespace Gallery::Pages::ButtonPage
 {
-	class ButtonPage : public PageBase
+	class Page : public TabPageBase
 	{
 		static Content GetSimpleButtonContent();
 		
 	public:
-		ButtonPage();
+		Page(HWND container);
 
 		// Inherited via PageBase
 		virtual void hide() override;

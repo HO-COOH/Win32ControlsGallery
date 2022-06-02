@@ -45,6 +45,15 @@
     <ClInclude Include="UI.Window.hpp">
       <Filter>UI</Filter>
     </ClInclude>
+    <ClInclude Include="UI.Shell.hpp">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls.TextEdit.hpp">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls.TreeView.hpp">
+      <Filter>Controls</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">

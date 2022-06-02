@@ -67,7 +67,7 @@ namespace Gallery
         }
 
         template<typename Handler>
-        void onClick(Handler&& handler)
+        auto onClick(Handler&& handler)
         {
             OnClickHandlers.remove(m_hwnd);
             OnClickHandlers.add(m_hwnd, [handler, this](HWND hwnd) mutable
@@ -76,6 +76,13 @@ namespace Gallery
                     Button_SetCheck(hwnd, m_checked);
                     handler(hwnd);
                 });
+        }
+
+		template<typename Handler>
+        auto newOnClick(Handler&& handler)
+        {
+            OnClickHandlers.remove(m_hwnd);
+            OnClickHandlers.add(m_hwnd, std::forward<Handler>(handler));
         }
     };
 

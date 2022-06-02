@@ -53,7 +53,7 @@ namespace Gallery
         return {};
     }
 
-    static LRESULT OnWMCalcSize(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+    [[maybe_unused]] static LRESULT OnWMCalcSize(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         if (wParam == TRUE)
             return 0;

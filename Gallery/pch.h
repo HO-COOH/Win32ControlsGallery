@@ -1,3 +1,3 @@
 #pragma once
-
-#include <../../Core/pch.h>
+#include <Windows.h>
+#include <windowsx.h>

@@ -170,8 +170,7 @@ public:
 
 
 Gallery::Pages::WindowPage::Page::Page(HWND hwnd, int width, int height, int row, int x) :
-    PageBase{L"Window"},
-    m_container{ hwnd},
+    TabPageBase{hwnd, L"Window"},
 	
 	windowStyles{m_container, L"Window Styles", 0, 0, 500, 2000},
     border{ m_container,   WS_BORDER, L"WS_BORDER", x, height * row++, width, height, Window::Styles::Description::border },
@@ -442,6 +441,18 @@ Gallery::Pages::WindowPage::Page::Page(HWND hwnd, int width, int height, int row
            OutputDebugString(L"Close window");
        }
    });
+
+   for (int i = 0; i < 3; ++i)
+   {
+       flip3D[i].addHandler();
+   }
+   flip3D.addHandler();
+
+   for (int i = 0; i < 4; ++i)
+   {
+       windowCornerPreference[i].addHandler();
+    }
+   windowCornerPreference.addHandler();
 }
 
 void Gallery::Pages::WindowPage::Page::hide()

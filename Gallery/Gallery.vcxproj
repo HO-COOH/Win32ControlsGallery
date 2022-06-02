@@ -25,6 +25,7 @@
     <ClCompile Include="Gallery.Pages.ButtonPage.Page.cpp" />
     <ClCompile Include="ControlBase.cpp" />
     <ClCompile Include="ControlExample.cpp" />
+    <ClCompile Include="Gallery.Pages.ShellPage.Page.cpp" />
     <ClCompile Include="Gallery.Pages.WindowPage.Page.cpp" />
     <ClCompile Include="Gallery.MainWindow.cpp" />
     <ClCompile Include="Gallery.Pages.WindowPage.DwmAttributeRadioButton.cpp" />
@@ -32,7 +33,7 @@
     <ClCompile Include="Gallery.Pages.WindowPage.WindowStyleAssist.cpp" />
     <ClCompile Include="Gallery.Pages.WindowPage.WindowStyleCheckbox.cpp" />
     <ClCompile Include="Gallery.Pages.WindowPage.WindowStyleTooltip.cpp" />
-    <ClCompile Include="Gallery.RadioButtonGroup.cpp" />
+    <ClCompile Include="Gallery.Pages.WinUIPage.Page.cpp" />
     <ClCompile Include="Gallery.Tabs.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Gallery.PageBase.cpp" />
@@ -42,6 +43,10 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="Gallery.SplashScreen.cpp" />
   </ItemGroup>
@@ -50,6 +55,7 @@
     <ClInclude Include="Gallery.Pages.ButtonPage.Page.h" />
     <ClInclude Include="ControlBase.h" />
     <ClInclude Include="ControlExample.h" />
+    <ClInclude Include="Gallery.Pages.ShellPage.Page.h" />
     <ClInclude Include="Gallery.Pages.WindowPage.Page.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Gallery.MainWindow.h" />
@@ -61,8 +67,9 @@
     <ClInclude Include="Gallery.Pages.WindowPage.WindowStyleTooltip.h" />
     <ClInclude Include="Gallery.RadioButtonGroup.h" />
     <ClInclude Include="Gallery.Slider.h" />
+    <ClInclude Include="Gallery.TabPageBase.h" />
     <ClInclude Include="Gallery.Tabs.h" />
-    <ClInclude Include="Gallery.WinRTInterop.h" />
+    <ClInclude Include="Gallery.Pages.WinUIPage.Page.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Handler.hpp" />
     <ClInclude Include="Gallery.PageBase.h" />
@@ -110,6 +117,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <EnableASAN>true</EnableASAN>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -123,6 +131,7 @@
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <EnableASAN>false</EnableASAN>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -130,6 +139,7 @@
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <EnableASAN>true</EnableASAN>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -152,10 +162,19 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ExternalIncludePath>$(ProjectDir)..\Core;$(ExternalIncludePath)</ExternalIncludePath>
     <IntDir>$(Platform)\$(Configuration)\intermediate\</IntDir>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <EnableClangTidyCodeAnalysis>false</EnableClangTidyCodeAnalysis>
+    <ClangTidyChecks>-clang-diagnostic-error</ClangTidyChecks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ExternalIncludePath>$(ProjectDir)..\Core;$(ExternalIncludePath)</ExternalIncludePath>
     <IntDir>$(Platform)\$(Configuration)\intermediate\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ExternalIncludePath>$(ProjectDir)..\Core;$(ExternalIncludePath)</ExternalIncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ExternalIncludePath>$(ProjectDir)..\Core;$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -163,9 +182,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -177,9 +199,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>

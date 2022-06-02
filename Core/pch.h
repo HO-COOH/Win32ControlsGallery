@@ -6,3 +6,4 @@
 #include "Controls.Tooltip.hpp"
 #include "Controls.Trackbar.hpp"
 #include "UI.Dwm.hpp"
+#include "UI.Shell.hpp"

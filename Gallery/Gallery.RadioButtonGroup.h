@@ -2,6 +2,9 @@
 #include <type_traits>
 #include <vector>
 #include "Gallery.Button.h"
+
+#include <string>
+
 namespace Gallery
 {
     template<typename T>
@@ -23,21 +26,29 @@ namespace Gallery
             }
         }
     public:
-        template<size_t N>
-        RadioButtonGroup(T(&& radioButtons)[N]) :
-            m_radioButtons(std::make_move_iterator(std::begin(radioButtons)), std::make_move_iterator(std::end(radioButtons)))
+        RadioButtonGroup(std::vector<T> radioButtons) : m_radioButtons{ std::move(radioButtons) }
+        {
+        }
+
+        void addHandler()
         {
             for (auto& radioButton : m_radioButtons)
             {
-                radioButton.onClick([this, &radioButton](HWND) mutable
-                {
-                    if (radioButton.isChecked())
-                        onElementCheck(radioButton);
-                });
+                auto oldHandler = radioButton.OnClickHandlers.get(radioButton.getHandle());
+                OutputDebugString(std::to_wstring(radioButton.isChecked()).c_str());
+                radioButton.newOnClick([&radioButton, this, oldHandler](HWND hwnd)
+                    {
+                        oldHandler(hwnd);
+                        if (radioButton.isChecked())
+                            onElementCheck(radioButton);
+                    });
             }
         }
 
-        
+        auto& operator[](size_t i)
+        {
+            return m_radioButtons[i];
+        }
     };
 
 }

@@ -33,3 +33,7 @@
 .vs
 x64
 /packages
+/cppcheck-cppcheck-build-dir
+
+Debug
+Release

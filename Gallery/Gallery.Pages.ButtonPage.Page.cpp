@@ -2,9 +2,9 @@
 #include "Gallery.Pages.ButtonPage.Page.h"
 #include "Gallery.Button.h"
 
-namespace Gallery
+namespace Gallery::Pages::ButtonPage
 {
-	Content ButtonPage::GetSimpleButtonContent()
+	Content Page::GetSimpleButtonContent()
 	{
 		//auto button = std::make_unique<ButtonEx>();
 		//button->setText("Standard Win32 Button");
@@ -14,15 +14,15 @@ namespace Gallery
 		return{};
 	}
 
-	ButtonPage::ButtonPage() : PageBase{L"Button"}
+	Page::Page(HWND container) : TabPageBase{container, L"Button"}
 	{
 	}
 
-	void ButtonPage::hide()
+	void Page::hide()
 	{
 	}
 
-	void ButtonPage::show()
+	void Page::show()
 	{
 	}
 

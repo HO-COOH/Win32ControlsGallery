@@ -27,7 +27,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>Utility</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
@@ -88,6 +88,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -102,6 +103,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -146,12 +148,15 @@
     <ClInclude Include="Controls.Button.hpp" />
     <ClInclude Include="Controls.Control.hpp" />
     <ClInclude Include="Controls.Tab.hpp" />
+    <ClInclude Include="Controls.TextEdit.hpp" />
     <ClInclude Include="Controls.Tooltip.hpp" />
     <ClInclude Include="Controls.Trackbar.hpp" />
+    <ClInclude Include="Controls.TreeView.hpp" />
     <ClInclude Include="Flags.hpp" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="UI.Dwm.hpp" />
     <ClInclude Include="UI.hpp" />
+    <ClInclude Include="UI.Shell.hpp" />
     <ClInclude Include="UI.Window.hpp" />
     <ClInclude Include="Util.Error.hpp" />
   </ItemGroup>

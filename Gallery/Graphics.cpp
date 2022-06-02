@@ -5,6 +5,7 @@
 #include <atlbase.h>
 #include <algorithm>
 #include <stdexcept>
+#include <Util.Error.hpp>
 
 #pragma comment(lib, "windowscodecs.lib")
 extern HINSTANCE gHinst;
@@ -30,11 +31,11 @@ public:
 		if (!m_imageFactory)
 			m_imageFactory.CoCreateInstance(CLSID_WICImagingFactory);
 		
-		auto hr = m_imageFactory->CreateDecoderFromFilename(name, nullptr, GENERIC_READ, WICDecodeMetadataCacheOnDemand, &m_decoder);
-		hr = m_decoder->GetFrame(0, &m_frameDecode);
+		Util::Error::ThrowOnError(m_imageFactory->CreateDecoderFromFilename(name, nullptr, GENERIC_READ, WICDecodeMetadataCacheOnDemand, &m_decoder));
+		Util::Error::ThrowOnError(m_decoder->GetFrame(0, &m_frameDecode));
 		/*WICConvertBitmapSource(format, m_frameDecode, &m_bitmapSource);*/
-		hr = m_imageFactory->CreateFormatConverter(&m_convertedFrame);
-		hr = m_convertedFrame->Initialize(m_frameDecode, format, WICBitmapDitherTypeNone, nullptr, 0.0, WICBitmapPaletteTypeCustom);
+		Util::Error::ThrowOnError(m_imageFactory->CreateFormatConverter(&m_convertedFrame));
+		Util::Error::ThrowOnError(m_convertedFrame->Initialize(m_frameDecode, format, WICBitmapDitherTypeNone, nullptr, 0.0, WICBitmapPaletteTypeCustom));
 	}
 
 	Graphics::Bitmap asBitmap()
@@ -63,9 +64,9 @@ public:
 		ReleaseDC(NULL, hdc);
 
 		CComPtr<IWICBitmapScaler> scaler;
-		auto hr = m_imageFactory->CreateBitmapScaler(&scaler);
+		Util::Error::ThrowOnError(m_imageFactory->CreateBitmapScaler(&scaler));
 
-		hr = scaler->Initialize(m_convertedFrame, width, height, WICBitmapInterpolationModeFant);
+		Util::Error::ThrowOnError(scaler->Initialize(m_convertedFrame, width, height, WICBitmapInterpolationModeFant));
 		
 		if (FAILED(scaler->CopyPixels(nullptr, width * channel, width * height * channel, static_cast<BYTE*>(bitmapData))))
 		{
@@ -125,9 +126,9 @@ Graphics::Bitmap::Bitmap(LPCTSTR fileName)
 
 	// Create a decoder for the given image file
 	pFactory->CreateDecoderFromFilename(
-		fileName, NULL, GENERIC_READ, WICDecodeMetadataCacheOnDemand, &m_pDecoder);
+		fileName, NULL, GENERIC_READ,
+		WICDecodeMetadataCacheOnDemand, &m_pDecoder);
 
-	UINT nCount = 0;
 	m_pDecoder->GetFrame(0, &m_pFrame);
 
 	// Retrieve the image dimensions

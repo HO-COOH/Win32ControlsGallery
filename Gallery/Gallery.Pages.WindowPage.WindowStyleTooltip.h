@@ -1,5 +1,6 @@
 #pragma once
 #include <Controls.Tooltip.hpp>
+#include <windowsx.h>
 extern HWND gHwnd;
 namespace Gallery::Pages::WindowPage
 {

@@ -3,6 +3,7 @@
 #include "Gallery.PageBase.h"
 #include <memory>
 #include "Handler.hpp"
+#include <Controls.Tab.hpp>
 namespace Gallery
 {
 	class Tabs : public Controls::Tab
@@ -21,6 +22,8 @@ namespace Gallery
 		Tabs(HWND parent, std::vector<std::unique_ptr<PageBase>> pages);
 		Tabs(HWND parent);
 		Tabs& operator+=(std::unique_ptr<PageBase>&& page);
+
+		void show();
 
 		std::unique_ptr<PageBase>& getCurrentShowingPage();
 		[[nodiscard]] HWND getContainerWindow();

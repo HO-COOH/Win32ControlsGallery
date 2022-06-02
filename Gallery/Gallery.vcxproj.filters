@@ -22,6 +22,12 @@
     <Filter Include="Pages\Button">
       <UniqueIdentifier>{62beb485-7255-4fb2-a62f-9b51b6f8cfed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Pages\Shell">
+      <UniqueIdentifier>{a70356f7-df46-4640-9917-13a3a797fb7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pages\WinUI">
+      <UniqueIdentifier>{af30eed3-2472-42ec-bb7c-4b18fdc8ca14}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ButtonEx.cpp">
@@ -66,9 +72,6 @@
     <ClCompile Include="Gallery.Pages.WindowPage.DwmAttributeRadioButton.cpp">
       <Filter>Pages\Window</Filter>
     </ClCompile>
-    <ClCompile Include="Gallery.RadioButtonGroup.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Gallery.Tabs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -77,6 +80,12 @@
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Gallery.Pages.ShellPage.Page.cpp">
+      <Filter>Pages\Shell</Filter>
+    </ClCompile>
+    <ClCompile Include="Gallery.Pages.WinUIPage.Page.cpp">
+      <Filter>Pages\WinUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -149,11 +158,17 @@
     <ClInclude Include="Gallery.Tabs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Gallery.WinRTInterop.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Gallery.Pages.WindowPage.WindowStyleAssist.h">
       <Filter>Pages\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Gallery.Pages.ShellPage.Page.h">
+      <Filter>Pages\Shell</Filter>
+    </ClInclude>
+    <ClInclude Include="Gallery.TabPageBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Gallery.Pages.WinUIPage.Page.h">
+      <Filter>Pages\WinUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -77,4 +77,11 @@ namespace Controls
 		};
 		InitCommonControlsEx(&icce);
 	}
+
+	template<typename T = int>
+	struct Range
+	{
+		T min;
+		T max;
+	};
 }

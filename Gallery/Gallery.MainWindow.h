@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <functional>
+#include <minwindef.h>
 namespace Gallery
 {
     class MainWindow

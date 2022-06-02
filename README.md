@@ -54,10 +54,11 @@ Built on top of the core layer, the framework layers provides a higher-level, de
   + DWM attributes
   + custom rendering
 ![](assets/Window.png)
+- WinUI Interop: Hosting WinUI Xaml controls
+![](assets/WinUIInterop.png)
 
 ## Build
-### Linking
-Link with `User32.dll` and `Comctl32.dll`
+C++20 is used. Use Visual Studio 2022 to build the solution.
 
 ## Notes
 - Member functions are provided by macros, that are internally a window message send to a control and returned a result
@@ -90,3 +91,5 @@ typedef struct tagTOOLINFOW {
 	+ The alpha arguments is `0` and `LWA_ALPHA` is used.
 	The window becomes `transparent`, that does not captures mouse inputs, including the title bar (if exists)
 - [High DPI changes example](https://github.com/microsoft/Windows-classic-samples/blob/main/Samples/DPIAwarenessPerWindow/client/DpiAwarenessContext.cpp)
+- If you don't fill the `.hWnd` member in `NOTIFYICONDATA` struct, calling `Shell_NotifyIcon()` will cause a sort of one-time notification effect.
+ Where the icon and notification still shows, but will disappear as soon as your mouse cursor hover over it.

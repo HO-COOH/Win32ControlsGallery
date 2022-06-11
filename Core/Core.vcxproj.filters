@@ -54,6 +54,18 @@
     <ClInclude Include="Controls.TreeView.hpp">
       <Filter>Controls</Filter>
     </ClInclude>
+    <ClInclude Include="Controls.UpDown.hpp">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls.ProgressBar.hpp">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls.Static.hpp">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="Controls.ListView.hpp">
+      <Filter>Controls</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">

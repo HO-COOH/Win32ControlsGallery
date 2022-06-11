@@ -147,11 +147,15 @@
   <ItemGroup>
     <ClInclude Include="Controls.Button.hpp" />
     <ClInclude Include="Controls.Control.hpp" />
+    <ClInclude Include="Controls.ListView.hpp" />
+    <ClInclude Include="Controls.ProgressBar.hpp" />
+    <ClInclude Include="Controls.Static.hpp" />
     <ClInclude Include="Controls.Tab.hpp" />
     <ClInclude Include="Controls.TextEdit.hpp" />
     <ClInclude Include="Controls.Tooltip.hpp" />
     <ClInclude Include="Controls.Trackbar.hpp" />
     <ClInclude Include="Controls.TreeView.hpp" />
+    <ClInclude Include="Controls.UpDown.hpp" />
     <ClInclude Include="Flags.hpp" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="UI.Dwm.hpp" />

@@ -4,6 +4,7 @@
 #include "Gallery.Button.h"
 #include "Gallery.Slider.h"
 #include "Gallery.Tabs.h"
+#include "Gallery.Spinbox.h"
 
 namespace Gallery
 {
@@ -115,6 +116,7 @@ namespace Gallery
             {
                 case TCN_SELCHANGE: Tabs::OnSelectionChangeHandlers.call(param->hwndFrom, param); return {};
                 case TRBN_THUMBPOSCHANGING: Slider::OnThumbPositionChangeHandlers.call(param->hwndFrom); return {};
+                case UDN_DELTAPOS: return Spinbox::OnValueChangeHandlers.call(param->hwndFrom, reinterpret_cast<LPNMUPDOWN>(param));
                 default:
                     break;
             }

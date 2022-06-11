@@ -4,6 +4,15 @@
 
 namespace Util::System
 {
+	/**
+	 * @brief An expressive wrapper around windows version macro to determine whether the current Windows is newer than a specified version
+	 * @example 
+	 * .cpp
+	 *	if (GetVersion() >= WindowsVersion::Windows10)
+	 *	{
+	 *  	// do thing specifically when greater than windows 10
+	 *  }
+	*/
 	class Version
 	{
 		class VersionImpl

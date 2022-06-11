@@ -27,12 +27,6 @@ namespace Graphics
 	{
 		HBITMAP m_bitmap{};
 		BITMAP m_info{};
-		BITMAPINFO m_info2{};
-
-		CComPtr<IWICImagingFactory> pFactory;
-		CComPtr<IWICBitmapDecoder> m_pDecoder;
-		CComPtr<IWICBitmapFrameDecode> m_pFrame;
-		CComPtr<IWICFormatConverter> m_pConvertedFrame;
 		UINT m_nWidth{};
 		UINT m_nHeight{};
 
@@ -41,7 +35,6 @@ namespace Graphics
 		Bitmap() = default;
 		explicit Bitmap(Image image);
 		Bitmap(HBITMAP hBitmap);
-		Bitmap(HBITMAP hBitmap, BITMAP info, BITMAPINFO const* info2 = nullptr);
 		Bitmap(LPCTSTR fileName);
 		~Bitmap();
 		HBITMAP getHandle() const;
@@ -50,7 +43,6 @@ namespace Graphics
 		operator bool() const;
 		int getWidth() const;
 		int getHeight() const;
-		auto& getInfo() const { return m_info2; }
 		void select(HDC hdc) const;
 	};
 }

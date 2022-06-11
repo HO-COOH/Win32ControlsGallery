@@ -28,6 +28,9 @@
     <Filter Include="Pages\WinUI">
       <UniqueIdentifier>{af30eed3-2472-42ec-bb7c-4b18fdc8ca14}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Pages\ProgressBar">
+      <UniqueIdentifier>{ba390253-36c8-44ea-bf3e-24d2f8a855be}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ButtonEx.cpp">
@@ -86,6 +89,12 @@
     </ClCompile>
     <ClCompile Include="Gallery.Pages.WinUIPage.Page.cpp">
       <Filter>Pages\WinUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Gallery.Pages.ProgressBarPage.Page.cpp">
+      <Filter>Pages\ProgressBar</Filter>
+    </ClCompile>
+    <ClCompile Include="Gallery.Pages.ProgressBarPage.ProgressBarCheckbox.cpp">
+      <Filter>Pages\ProgressBar</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +178,15 @@
     </ClInclude>
     <ClInclude Include="Gallery.Pages.WinUIPage.Page.h">
       <Filter>Pages\WinUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Gallery.Pages.ProgressBarPage.Page.h">
+      <Filter>Pages\ProgressBar</Filter>
+    </ClInclude>
+    <ClInclude Include="Gallery.Spinbox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Gallery.Pages.ProgressBarPage.ProgrssBarCheckbox.h">
+      <Filter>Pages\ProgressBar</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

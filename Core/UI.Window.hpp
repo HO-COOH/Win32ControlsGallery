@@ -8,12 +8,80 @@ namespace UI
 	protected:
 		HWND m_hwnd{};
 	public:
+
+		//Constants
+		enum class Styles : DWORD
+		{
+			Border = WS_BORDER,
+			Caption = WS_CAPTION,
+			Child = WS_CHILD,
+			ChildWindow = WS_CHILDWINDOW,
+			ClipChildren = WS_CLIPCHILDREN,
+			ClipSiblings = WS_CLIPSIBLINGS,
+			Disabled = WS_DISABLED,
+			DlgFrame = WS_DLGFRAME,
+			Group = WS_GROUP,
+			HScroll = WS_HSCROLL,
+			VScroll = WS_VSCROLL,
+			Iconic = WS_ICONIC,
+			Maximize = WS_MAXIMIZE,
+			MaximizeBox = WS_MAXIMIZEBOX,
+			Minimize = WS_MINIMIZE,
+			MinimizeBox = WS_MINIMIZEBOX,
+			Overlapped = WS_OVERLAPPED,
+			OverlappedWindow = WS_OVERLAPPEDWINDOW,
+			Popup = WS_POPUP,
+			PopupWindow = WS_POPUPWINDOW,
+			SizeBox = WS_SIZEBOX,
+			SysMenu = WS_SYSMENU,
+			TabStop = WS_TABSTOP,
+			ThickFrame = WS_THICKFRAME,
+			Tiled = WS_TILED,
+			TiledWindow = WS_TILEDWINDOW,
+			Visible = WS_VISIBLE,
+		};
+
+		enum class ExStyles : DWORD
+		{
+			AcceptFiles = WS_EX_ACCEPTFILES,
+			AppWindow = WS_EX_APPWINDOW,
+			ClientEdge = WS_EX_CLIENTEDGE,
+			Composited = WS_EX_COMPOSITED,
+			ContextHelp = WS_EX_CONTEXTHELP,
+			ControlParent = WS_EX_CONTROLPARENT,
+			DlgModalFrame = WS_EX_DLGMODALFRAME,
+			Layered = WS_EX_LAYERED,
+			LayoutRTL = WS_EX_LAYOUTRTL,
+			Left = WS_EX_LEFT,
+			LeftScrollBar = WS_EX_LEFTSCROLLBAR,
+			LTRReading = WS_EX_LTRREADING,
+			MDIChild = WS_EX_MDICHILD,
+			NoActivate = WS_EX_NOACTIVATE,
+			NoInheritLayout = WS_EX_NOINHERITLAYOUT,
+			NoParentNotify = WS_EX_NOPARENTNOTIFY,
+			NoRedirectionBitmap = WS_EX_NOREDIRECTIONBITMAP,
+			OverlapppedWindow = WS_EX_OVERLAPPEDWINDOW,
+			Right = WS_EX_RIGHT,
+			RightScrollBar = WS_EX_RIGHTSCROLLBAR,
+			RTLReading = WS_EX_RTLREADING,
+			StaticEdge = WS_EX_STATICEDGE,
+			ToolWindow = WS_EX_TOOLWINDOW,
+			TopMost = WS_EX_TOPMOST,
+			Transparent = WS_EX_TRANSPARENT,
+			WindowEdge = WS_EX_WINDOWEDGE,
+		};
+		
 		Window() = default;
 		Window(HWND hwnd) : m_hwnd(hwnd) {}
+		Window(LPCTSTR className, LPCTSTR windowName, DWORD style, int x, int y, int width, int height, HWND parent = {}, HMENU menu = {}, HINSTANCE instance = {}, LPVOID param = {}) :
+			m_hwnd{ CreateWindow(className, windowName, style, x, y, width, height, parent, menu, instance, param) } {}
+		Window(DWORD exStyle, LPCTSTR className, LPCTSTR windowName, DWORD style, int x, int y, int width, int height, HWND parent = {}, HMENU menu = {}, HINSTANCE instance = {}, LPVOID param = {}) :
+			m_hwnd{ CreateWindowEx(exStyle, className, windowName, style, x, y, width, height, parent, menu, instance, param) } {}
 		
 		Window& operator=(HWND hwnd) { m_hwnd = hwnd; return *this; }
 		operator bool() const { return m_hwnd != HWND{}; }
 		operator HWND() const { return m_hwnd; }
+		
 		enum class ShowType
 		{
 			Hide = SW_HIDE,
@@ -34,14 +102,14 @@ namespace UI
 			NoActive = SW_SHOWNOACTIVATE,
 		};
 
-		void show(ShowType showType)
+		void show(ShowType showType = ShowType::Show)
 		{
 			ShowWindow(m_hwnd, static_cast<int>(showType));
 		}
 
 		void showAsync(ShowType showType)
 		{
-			ShowWindow(m_hwnd, static_cast<int>(showType));
+			ShowWindowAsync(m_hwnd, static_cast<int>(showType));
 		}
 
 		void setStyle(DWORD style)

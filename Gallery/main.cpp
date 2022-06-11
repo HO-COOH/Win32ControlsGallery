@@ -9,15 +9,16 @@
 #include "Gallery.Pages.ButtonPage.Page.h"
 #include "Gallery.Pages.ShellPage.Page.h"
 #include "Gallery.Pages.WinUIPage.Page.h"
+#include "Gallery.Pages.ProgressBarPage.Page.h"
 
 
 using namespace Gallery;
 
 
 
-//#pragma comment(linker,"\"/manifestdependency:type='win32' \
-//name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
-//processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+#pragma comment(linker,"\"/manifestdependency:type='win32' \
+name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
+processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
 HINSTANCE gHinst;
 HWND gHwnd;
@@ -110,9 +111,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     tab += std::make_unique<Gallery::Pages::ButtonPage::Page>(tab.getContainerWindow());
 	tab += std::make_unique<Gallery::Pages::ShellPage::Page>(tab.getContainerWindow());
 	tab += std::make_unique<Gallery::Pages::WinUIPage::Page>(tab.getContainerWindow());
+	tab += std::make_unique<Gallery::Pages::ProgressBarPage::Page>(tab.getContainerWindow());
 	tab.show();
 	
-
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 

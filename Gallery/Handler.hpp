@@ -26,15 +26,32 @@ public:
     }
 
     template<typename Identifier, typename ... Args>
-    void call(Identifier id, Args&& ... args)
+    auto call(Identifier id, Args&& ... args)
     {
-        if (m_handlers.empty())
-            return;
-
-        auto it = m_handlers.find(id);
-        if (it != m_handlers.end())
+        using ReturnType = decltype(m_handlers)::mapped_type::result_type;
+        if constexpr (std::is_same_v<ReturnType, void>)
         {
-            it->second(std::forward<Args>(args)...);
+            if (m_handlers.empty())
+                return;
+
+            auto it = m_handlers.find(id);
+            if (it != m_handlers.end())
+            {
+                it->second(std::forward<Args>(args)...);
+            }
+            return;
+        }
+        else
+        {
+            if (m_handlers.empty())
+                return ReturnType{};
+
+            auto it = m_handlers.find(id);
+            if (it != m_handlers.end())
+            {
+                return it->second(std::forward<Args>(args)...);
+            }
+            return ReturnType{};
         }
     }
 };

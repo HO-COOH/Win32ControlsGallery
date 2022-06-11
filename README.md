@@ -16,11 +16,18 @@ Current controls:
 |---|---|
 |[Tab](https://docs.microsoft.com/en-us/windows/win32/controls/tab-control-reference) |`Controls::Tab`
 |[Button](https://docs.microsoft.com/en-us/windows/win32/controls/buttons) |`Controls::Button`
+|[Progrss Bar](https://docs.microsoft.com/en-us/windows/win32/controls/progress-bar-control-reference) |`Controls::ProgresBar`
+|[UpDown](https://docs.microsoft.com/en-us/windows/win32/controls/up-down-controls)|`Controls::UpDown`
+|[Static](https://docs.microsoft.com/en-us/windows/win32/controls/static-controls)|`Controls::Static`
+|[Edit Control](https://docs.microsoft.com/en-us/windows/win32/controls/edit-controls)|`Controls::TextEdit`
+|[Trackbar](https://docs.microsoft.com/en-us/windows/win32/controls/trackbar-control-reference)|`Controls::Trackbar`
+|[Tooltip](https://docs.microsoft.com/en-us/windows/win32/controls/tooltip-control-reference)|`Controls::Tooltip`
 
 Also thin wrapper around common Win32 APIs
 - `namespace UI`
-    + `namespace UI::Dwm`
-    + `namespace UI::Window`
+    + `namespace UI::Dwm`: Dwm APIs controlling window composition
+    + `namespace UI::Window`: Win32 Windowing APIs
+    + `namespace UI::Shell`: Win32 Shell integration APIs (such as taskbar icons, notifications, etc.)
 - `namespace Util`
     + `namespace Util::Error`
     + `namespace Util::System`
@@ -93,3 +100,7 @@ typedef struct tagTOOLINFOW {
 - [High DPI changes example](https://github.com/microsoft/Windows-classic-samples/blob/main/Samples/DPIAwarenessPerWindow/client/DpiAwarenessContext.cpp)
 - If you don't fill the `.hWnd` member in `NOTIFYICONDATA` struct, calling `Shell_NotifyIcon()` will cause a sort of one-time notification effect.
  Where the icon and notification still shows, but will disappear as soon as your mouse cursor hover over it.
+
+ - The `UpDown Control` by default sets the minimum to 100 and maximum to 0. (You can use an `Edit Control` as its buddy window to confirm that).
+As a result, pressing the up arrow decrease the value and the down arrow increase the value, which is probably not what you intended.
+To flip that, use `setRange()` function to swap the maximum and minimum value.

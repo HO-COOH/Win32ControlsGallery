@@ -25,6 +25,8 @@
     <ClCompile Include="Gallery.Pages.ButtonPage.Page.cpp" />
     <ClCompile Include="ControlBase.cpp" />
     <ClCompile Include="ControlExample.cpp" />
+    <ClCompile Include="Gallery.Pages.ProgressBarPage.Page.cpp" />
+    <ClCompile Include="Gallery.Pages.ProgressBarPage.ProgressBarCheckbox.cpp" />
     <ClCompile Include="Gallery.Pages.ShellPage.Page.cpp" />
     <ClCompile Include="Gallery.Pages.WindowPage.Page.cpp" />
     <ClCompile Include="Gallery.MainWindow.cpp" />
@@ -55,6 +57,8 @@
     <ClInclude Include="Gallery.Pages.ButtonPage.Page.h" />
     <ClInclude Include="ControlBase.h" />
     <ClInclude Include="ControlExample.h" />
+    <ClInclude Include="Gallery.Pages.ProgressBarPage.Page.h" />
+    <ClInclude Include="Gallery.Pages.ProgressBarPage.ProgrssBarCheckbox.h" />
     <ClInclude Include="Gallery.Pages.ShellPage.Page.h" />
     <ClInclude Include="Gallery.Pages.WindowPage.Page.h" />
     <ClInclude Include="framework.h" />
@@ -67,6 +71,7 @@
     <ClInclude Include="Gallery.Pages.WindowPage.WindowStyleTooltip.h" />
     <ClInclude Include="Gallery.RadioButtonGroup.h" />
     <ClInclude Include="Gallery.Slider.h" />
+    <ClInclude Include="Gallery.Spinbox.h" />
     <ClInclude Include="Gallery.TabPageBase.h" />
     <ClInclude Include="Gallery.Tabs.h" />
     <ClInclude Include="Gallery.Pages.WinUIPage.Page.h" />

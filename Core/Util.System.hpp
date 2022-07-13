@@ -6,7 +6,7 @@ namespace Util::System
 {
 	/**
 	 * @brief An expressive wrapper around windows version macro to determine whether the current Windows is newer than a specified version
-	 * @example 
+	 * @example
 	 * .cpp
 	 *	if (GetVersion() >= WindowsVersion::Windows10)
 	 *	{
@@ -21,7 +21,7 @@ namespace Util::System
 
 		public:
 			constexpr VersionImpl(bool(*versionFunction)()) : m_versionFunction(versionFunction) {}
-			bool operator<(Version _) const{ return !m_versionFunction(); }
+			bool operator<(Version _) const { return !m_versionFunction(); }
 			friend class Version;
 		};
 	public:
@@ -30,7 +30,7 @@ namespace Util::System
 			assert(rhs.m_versionFunction);
 			return rhs.m_versionFunction();
 		}
-		
+
 		//Versions
 		static inline VersionImpl WindowsXP{ IsWindowsXPOrGreater };
 		static inline VersionImpl WindowsXPSP1{ IsWindowsXPSP1OrGreater };
@@ -45,6 +45,22 @@ namespace Util::System
 		static inline VersionImpl Windows8_1{ IsWindows8Point1OrGreater };
 		static inline VersionImpl Windows10{ IsWindows10OrGreater };
 	};
-	
+
 	constexpr Version GetVersion() { return {}; }
+
+	enum class Parameters
+	{
+		IconTitleLogFont = SPI_GETICONTITLELOGFONT,
+
+	};
+	template<Parameters param>
+	auto ParametersInfoForDpi(UINT dpi);
+
+	template<>
+	inline auto ParametersInfoForDpi<Parameters::IconTitleLogFont>(UINT dpi)
+	{
+		LOGFONT font;
+		SystemParametersInfoForDpi(static_cast<UINT>(Parameters::IconTitleLogFont), sizeof(font), &font, 0, dpi);
+		return font;
+	}
 }

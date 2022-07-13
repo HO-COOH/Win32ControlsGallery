@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.Windows.SDK.BuildTools.10.0.22000.197\build\Microsoft.Windows.SDK.BuildTools.props" Condition="Exists('..\packages\Microsoft.Windows.SDK.BuildTools.10.0.22000.197\build\Microsoft.Windows.SDK.BuildTools.props')" />
+  <Import Project="..\packages\Microsoft.WindowsAppSDK.1.1.0\build\native\Microsoft.WindowsAppSDK.props" Condition="Exists('..\packages\Microsoft.WindowsAppSDK.1.1.0\build\native\Microsoft.WindowsAppSDK.props')" />
   <Import Project="..\packages\Microsoft.Toolkit.Win32.UI.SDK.6.1.2\build\Microsoft.Toolkit.Win32.UI.SDK.props" Condition="Exists('..\packages\Microsoft.Toolkit.Win32.UI.SDK.6.1.2\build\Microsoft.Toolkit.Win32.UI.SDK.props')" />
   <Import Project="..\packages\Microsoft.Windows.CppWinRT.2.0.210806.1\build\native\Microsoft.Windows.CppWinRT.props" Condition="Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.210806.1\build\native\Microsoft.Windows.CppWinRT.props')" />
   <ItemGroup Label="ProjectConfigurations">
@@ -23,8 +25,7 @@
   <ItemGroup>
     <ClCompile Include="ButtonEx.cpp" />
     <ClCompile Include="Gallery.Pages.ButtonPage.Page.cpp" />
-    <ClCompile Include="ControlBase.cpp" />
-    <ClCompile Include="ControlExample.cpp" />
+    <ClCompile Include="Gallery.ControlExample.cpp" />
     <ClCompile Include="Gallery.Pages.ProgressBarPage.Page.cpp" />
     <ClCompile Include="Gallery.Pages.ProgressBarPage.ProgressBarCheckbox.cpp" />
     <ClCompile Include="Gallery.Pages.ShellPage.Page.cpp" />
@@ -56,7 +57,7 @@
     <ClInclude Include="Gallery.Button.h" />
     <ClInclude Include="Gallery.Pages.ButtonPage.Page.h" />
     <ClInclude Include="ControlBase.h" />
-    <ClInclude Include="ControlExample.h" />
+    <ClInclude Include="Gallery.ControlExample.h" />
     <ClInclude Include="Gallery.Pages.ProgressBarPage.Page.h" />
     <ClInclude Include="Gallery.Pages.ProgressBarPage.ProgrssBarCheckbox.h" />
     <ClInclude Include="Gallery.Pages.ShellPage.Page.h" />
@@ -167,13 +168,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ExternalIncludePath>$(ProjectDir)..\Core;$(ExternalIncludePath)</ExternalIncludePath>
     <IntDir>$(Platform)\$(Configuration)\intermediate\</IntDir>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
     <EnableClangTidyCodeAnalysis>false</EnableClangTidyCodeAnalysis>
     <ClangTidyChecks>-clang-diagnostic-error</ClangTidyChecks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ExternalIncludePath>$(ProjectDir)..\Core;$(ExternalIncludePath)</ExternalIncludePath>
     <IntDir>$(Platform)\$(Configuration)\intermediate\</IntDir>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ExternalIncludePath>$(ProjectDir)..\Core;$(ExternalIncludePath)</ExternalIncludePath>
@@ -253,6 +255,8 @@
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\packages\Microsoft.Windows.CppWinRT.2.0.210806.1\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.210806.1\build\native\Microsoft.Windows.CppWinRT.targets')" />
     <Import Project="..\packages\Microsoft.Toolkit.Win32.UI.SDK.6.1.2\build\Microsoft.Toolkit.Win32.UI.SDK.targets" Condition="Exists('..\packages\Microsoft.Toolkit.Win32.UI.SDK.6.1.2\build\Microsoft.Toolkit.Win32.UI.SDK.targets')" />
+    <Import Project="..\packages\Microsoft.WindowsAppSDK.1.1.0\build\native\Microsoft.WindowsAppSDK.targets" Condition="Exists('..\packages\Microsoft.WindowsAppSDK.1.1.0\build\native\Microsoft.WindowsAppSDK.targets')" />
+    <Import Project="..\packages\Microsoft.Windows.SDK.BuildTools.10.0.22000.197\build\Microsoft.Windows.SDK.BuildTools.targets" Condition="Exists('..\packages\Microsoft.Windows.SDK.BuildTools.10.0.22000.197\build\Microsoft.Windows.SDK.BuildTools.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -262,5 +266,9 @@
     <Error Condition="!Exists('..\packages\Microsoft.Windows.CppWinRT.2.0.210806.1\build\native\Microsoft.Windows.CppWinRT.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.CppWinRT.2.0.210806.1\build\native\Microsoft.Windows.CppWinRT.targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Toolkit.Win32.UI.SDK.6.1.2\build\Microsoft.Toolkit.Win32.UI.SDK.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Toolkit.Win32.UI.SDK.6.1.2\build\Microsoft.Toolkit.Win32.UI.SDK.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Toolkit.Win32.UI.SDK.6.1.2\build\Microsoft.Toolkit.Win32.UI.SDK.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Toolkit.Win32.UI.SDK.6.1.2\build\Microsoft.Toolkit.Win32.UI.SDK.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.WindowsAppSDK.1.1.0\build\native\Microsoft.WindowsAppSDK.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.WindowsAppSDK.1.1.0\build\native\Microsoft.WindowsAppSDK.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.WindowsAppSDK.1.1.0\build\native\Microsoft.WindowsAppSDK.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.WindowsAppSDK.1.1.0\build\native\Microsoft.WindowsAppSDK.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Windows.SDK.BuildTools.10.0.22000.197\build\Microsoft.Windows.SDK.BuildTools.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.SDK.BuildTools.10.0.22000.197\build\Microsoft.Windows.SDK.BuildTools.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Windows.SDK.BuildTools.10.0.22000.197\build\Microsoft.Windows.SDK.BuildTools.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Windows.SDK.BuildTools.10.0.22000.197\build\Microsoft.Windows.SDK.BuildTools.targets'))" />
   </Target>
 </Project>

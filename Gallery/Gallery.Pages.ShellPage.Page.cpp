@@ -11,7 +11,6 @@ extern HWND gHwnd;
 
 namespace Gallery::Pages::ShellPage
 {
-    static CComPtr<ITaskbarList3> m_taskbarApi;
     TaskbarProgressStateRadioButton::TaskbarProgressStateRadioButton(
         HWND parent, LPCTSTR text, int x, int y, int width, int height, TBPFLAG flag) :
         RadioButton{ parent, text, x, y, width, height },
@@ -55,9 +54,8 @@ namespace Gallery::Pages::ShellPage
 		m_makeNotification{m_container, static_cast<DWORD>(Controls::Button::Style::PushButton), 0, row++ * height, width, height},
         m_jumpListContent{m_container, static_cast<DWORD>(Controls::TextEdit::Styles::Center) | static_cast<DWORD>(Controls::TextEdit::Styles::AutoHScroll) | WS_BORDER, 500, height, 200, height}
     {
-        CheckRet(m_taskbarApi.CoCreateInstance(CLSID_TaskbarList));
 
-        CheckRet(m_taskbarApi->SetProgressState(gHwnd, TBPF_NORMAL));
+        UI::Shell::Taskbar::SetProgressState(gHwnd, UI::Shell::Taskbar::ProgressState::Normal);
         m_taskbarProgressSlider.setRange(0, 100);
         m_taskbarProgressSlider.setPos(true, 50);
         m_taskbarProgressSlider.onPositionChange(
@@ -65,7 +63,7 @@ namespace Gallery::Pages::ShellPage
             {
                 auto const pos = m_taskbarProgressSlider.getPos();
                 //set progress on taskbar
-                CheckRet(m_taskbarApi->SetProgressValue(gHwnd, pos, 100));
+                UI::Shell::Taskbar::SetProgressValue(gHwnd, pos, 100);
             }
         ); 
 
@@ -74,12 +72,11 @@ namespace Gallery::Pages::ShellPage
         {
             auto& button = m_progressStates[i];
             button.onClick([&button](HWND)
-                {
-                    if (button.isChecked())
-                        m_taskbarApi->SetProgressState(gHwnd, button.getFlag());
-                    else
-                        m_taskbarApi->SetProgressState(gHwnd, TBPF_NOPROGRESS);
-                });
+            {
+                UI::Shell::Taskbar::SetProgressState(gHwnd, button.isChecked() ? 
+                    static_cast<UI::Shell::Taskbar::ProgressState>(button.getFlag()) : 
+                    UI::Shell::Taskbar::ProgressState::NoProgress);
+            });
         }
         m_progressStates.addHandler();
 
@@ -110,7 +107,7 @@ namespace Gallery::Pages::ShellPage
         m_makeNotification.onClick([this](HWND)
         {
             static auto data = GetNotifyData(true);
-            UI::Shell::NotifyIcon(m_added ? UI::Shell::NotifyIconMethod::Mofidy : UI::Shell::NotifyIconMethod::Add, data);
+            UI::Shell::NotifyIcon(m_added ? UI::Shell::NotifyIconMethod::Modify : UI::Shell::NotifyIconMethod::Add, data);
             m_added = true;
         });
         

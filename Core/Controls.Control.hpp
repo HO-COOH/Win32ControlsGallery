@@ -15,6 +15,14 @@ namespace Controls
 		using Handle = HWND;
 		inline Handle getHandle() const;
 		inline void setVisible(bool visible = true);
+		void move(int x, int y)
+		{
+			SetWindowPos(m_hwnd, NULL, x, y, 0, 0, SWP_NOSIZE | SWP_NOACTIVATE);
+		}
+		void move(int x, int y, int width, int height)
+		{
+			MoveWindow(m_hwnd, x, y, width, height, false);
+		}
 	};
 
 	LRESULT Control::sendMessage(UINT message, WPARAM wParam, LPARAM lParam)

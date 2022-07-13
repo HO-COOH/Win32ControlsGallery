@@ -55,7 +55,7 @@ namespace Controls
             ClassName,
             L"",
             WS_CHILD | WS_CLIPSIBLINGS | WS_VISIBLE,
-            0, 0, rcClient.right, rcClient.bottom,
+            0, 0, rcClient.right, 30,
             parent,
             nullptr,
             gHinst,

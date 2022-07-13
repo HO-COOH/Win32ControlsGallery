@@ -61,7 +61,8 @@ namespace Gallery
 	
     Tabs::Tabs(HWND parent, std::vector<std::unique_ptr<PageBase>> pages) :
         Controls::Tab(parent),
-        m_pages(std::move(pages))
+        m_pages(std::move(pages)),
+        parent{parent}
     {
         int i = 0;
         for (auto& page : m_pages)
@@ -69,7 +70,7 @@ namespace Gallery
         addHandler();
     }
 
-    Tabs::Tabs(HWND parent) : Controls::Tab(parent)
+    Tabs::Tabs(HWND parent) : Controls::Tab(parent), parent{parent}
     {
         addHandler();
     }
@@ -100,10 +101,9 @@ namespace Gallery
         RECT rect{};
         auto const handle = getHandle();
         GetClientRect(handle, &rect);
-        adjustRect(FALSE, rect);
+        RECT parentRect{};
+        GetClientRect(parent, &parentRect);
 		//TODO: fix high dpi
-        rect.top += 25;
-        rect.bottom = 2000;
-        return CreateWindow(L"container", L"", WS_CHILD, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, handle, NULL, NULL, NULL);
+        return CreateWindow(L"container", L"", WS_CHILD, rect.left, rect.bottom, rect.right - rect.left, parentRect.bottom - rect.bottom, parent, NULL, NULL, NULL);
     }
 }

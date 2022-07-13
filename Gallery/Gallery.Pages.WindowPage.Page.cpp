@@ -451,7 +451,7 @@ Gallery::Pages::WindowPage::Page::Page(HWND hwnd, int width, int height, int row
    for (int i = 0; i < 4; ++i)
    {
        windowCornerPreference[i].addHandler();
-    }
+   }
    windowCornerPreference.addHandler();
 }
 

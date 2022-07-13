@@ -36,10 +36,7 @@
     <ClCompile Include="ButtonEx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ControlBase.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ControlExample.cpp">
+    <ClCompile Include="Gallery.ControlExample.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Graphics.cpp">
@@ -104,7 +101,7 @@
     <ClInclude Include="ControlBase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ControlExample.h">
+    <ClInclude Include="Gallery.ControlExample.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="framework.h">

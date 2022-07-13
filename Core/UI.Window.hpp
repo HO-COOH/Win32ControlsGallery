@@ -1,6 +1,9 @@
 #pragma once
 #include <WinUser.h>
 #include <wtypes.h>
+#include <Uxtheme.h>
+#include <vsstyle.h>
+#include <windowsx.h>
 namespace UI
 {
 	class Window
@@ -127,15 +130,30 @@ namespace UI
 
 		}
 
+		HFONT getFont()
+		{
+			return GetWindowFont(m_hwnd);
+		}
+
 		void setExtendedStyle(DWORD style)
 		{
 			SetWindowLongPtr(m_hwnd, GWL_EXSTYLE, style);
 		}
 
-		void setUserData()
+		template<typename T>
+		LONG_PTR setUserData(T value)
 		{
-
+			static_assert(sizeof(T) <= sizeof(void*));
+			return SetWindowLongPtr(m_hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(value));
 		}
+
+		template<typename T>
+		T getUserData() const
+		{
+			static_assert(sizeof(T) <= sizeof(void*));
+			return reinterpret_cast<T>(GetWindowLongPtr(m_hwnd, GWLP_USERDATA));
+		}
+		
 
 		void setWindowProcedure()
 		{
@@ -151,5 +169,56 @@ namespace UI
 		{
 			UpdateWindow(m_hwnd);
 		}
+
+		class Theme
+		{
+			HTHEME m_theme;
+		public:
+			struct PartsAndState
+			{
+				int part;
+				int state;
+			};
+			Theme(HWND hwnd, LPCTSTR classList) : m_theme{ OpenThemeData(hwnd, classList) }
+			{
+			}
+			SIZE getPartSize(PartsAndState partsAndState)
+			{
+				SIZE size{};
+				GetThemePartSize(m_theme, NULL, partsAndState.part, partsAndState.state, NULL, TS_TRUE, &size);
+				return size;
+			}
+			~Theme()
+			{
+				CloseThemeData(m_theme);
+			}
+		};
+
+		struct Parts
+		{
+			class Caption
+			{
+				constexpr static auto id = WP_CAPTION;
+			public:
+				struct States
+				{
+					constexpr static auto Active = Theme::PartsAndState{Caption::id, CS_ACTIVE};
+				};
+			};
+		};
+
+		RECT getClientRect() const
+		{
+			RECT rect{};
+			GetClientRect(m_hwnd, &rect);
+			return rect;
+		}
+
+		Theme openThemeData()
+		{
+			return Theme{ m_hwnd, L"WINDOW" };
+		}
+
+		HWND getHandle() const { return m_hwnd; }
 	};
 }

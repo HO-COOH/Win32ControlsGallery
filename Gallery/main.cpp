@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include <UI.Window.hpp>
 #include "Gallery.Pages.WindowPage.ExampleWindow.h"
 #include "Gallery.MainWindow.h"
@@ -67,8 +67,7 @@ BOOL InitInstance(int nCmdShow)
 	return TRUE;
 }
 
-
-void InitWindow()
+static void InitWindow()
 {
 	// Initialize global strings
 	LoadStringW(gHinst, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
@@ -80,17 +79,64 @@ void InitWindow()
 	}
 }
 
-
-
+#include <winrt/Windows.Foundation.h>
+#include <winrt/Microsoft.Windows.AppNotifications.h>
+#include <MddBootstrap.h>
+static void InitWindowsAppSdk()
+{
+	const UINT32 majorMinorVersion{ 0x00010000 };
+	PCWSTR versionTag{ L"" };
+	const PACKAGE_VERSION minVersion{};
+	Util::Error::ThrowOnError(MddBootstrapInitialize(
+		majorMinorVersion, 
+		versionTag,
+		minVersion));
+}
 
 void Init()
 {
 	SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2);
 	InitWindow();
 	Controls::Init();
-
-
 }
+
+class WindowsAppSdkNotification
+{
+public:
+	void Init()
+	{
+		auto manager = winrt::Microsoft::Windows::AppNotifications::AppNotificationManager::Default();
+		auto token = manager.NotificationInvoked([](auto, auto)
+		{
+
+		});
+
+		manager.Register();
+	}
+
+	WindowsAppSdkNotification()
+	{
+		Init();
+	}
+
+	void test()
+	{
+		winrt::hstring xml = LR"(
+<toast>
+	<visual>
+		<binding template="ToastGeneric">
+			<text>Hello World!</text>
+		</binding>
+	</visual>
+	<actions>
+		<action content="Open App"/>
+	</actions>
+</toast>
+)";
+		winrt::Microsoft::Windows::AppNotifications::AppNotification toast{ xml };
+		winrt::Microsoft::Windows::AppNotifications::AppNotificationManager::Default().Show(toast);
+	}
+};
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_opt_ HINSTANCE hPrevInstance,
@@ -104,7 +150,13 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     //Ensure that the common control DLL (ComCtl32.dll) is loaded
     Init();
-
+	
+	/*Test for notifications on Windows App Sdk
+		
+	WindowsAppSdkNotification notification;
+	notification.test();
+	
+	*/
 
     Tabs tab{ gHwnd };
     tab += std::make_unique<Gallery::Pages::WindowPage::Page>(tab.getContainerWindow());

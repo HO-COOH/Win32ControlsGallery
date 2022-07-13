@@ -1,5 +1,5 @@
 #pragma once
-#include "ControlExample.h"
+#include "Gallery.ControlExample.h"
 
 namespace Gallery
 {

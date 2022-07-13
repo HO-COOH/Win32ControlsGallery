@@ -7,6 +7,10 @@
 
 namespace Gallery
 {
+	/**
+	 * @brief This object should be instantiated with std::shared_ptr, 
+	 * because it get a reference to itself in the async wait
+	*/
 	class SplashScreen : public std::enable_shared_from_this<SplashScreen>
 	{
 		static constexpr auto inline ClassName = L"SplashScreen";

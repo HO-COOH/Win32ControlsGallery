@@ -104,3 +104,9 @@ typedef struct tagTOOLINFOW {
  - The `UpDown Control` by default sets the minimum to 100 and maximum to 0. (You can use an `Edit Control` as its buddy window to confirm that).
 As a result, pressing the up arrow decrease the value and the down arrow increase the value, which is probably not what you intended.
 To flip that, use `setRange()` function to swap the maximum and minimum value.
+- To use Xaml Island with system Xaml, install `Microsoft.Toolkit.Win32.UI.SDK` nuget package
+- To use Windows App SDK, follow [this guide](https://docs.microsoft.com/en-us/windows/apps/windows-app-sdk/use-windows-app-sdk-in-existing-project)
+- [Multi-color text formatting](https://www.codeproject.com/Articles/12093/Using-RichEditCtrl-to-Display-Formatted-Logs)
+- mfc wrapper of gdi object is in header `<afxwin.h>`, and you need to include it before `#include <windows.h>`
+- [win32 custom title bar explained](https://kubyshkin.name/posts/win32-window-custom-title-bar-caption/)
+- [Flicker-Free Displays Using an Off-Screen DC](https://docs.microsoft.com/en-us/previous-versions/ms969905(v=msdn.10)?redirectedfrom=MSDN)

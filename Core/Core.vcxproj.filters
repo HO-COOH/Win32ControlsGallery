@@ -66,6 +66,12 @@
     <ClInclude Include="Controls.ListView.hpp">
       <Filter>Controls</Filter>
     </ClInclude>
+    <ClInclude Include="Controls.RichEdit.hpp">
+      <Filter>Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="UI.Gdi.hpp">
+      <Filter>UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">

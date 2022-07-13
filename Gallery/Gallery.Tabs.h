@@ -15,6 +15,7 @@ namespace Gallery
 		void setCurrentShowingPage(int selection);
 
 		static void RegisterContainer();
+		HWND parent{};
 	public:
 
 		static inline Handler<HWND, void(NMHDR const*)> OnSelectionChangeHandlers;

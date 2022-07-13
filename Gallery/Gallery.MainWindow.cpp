@@ -5,6 +5,7 @@
 #include "Gallery.Slider.h"
 #include "Gallery.Tabs.h"
 #include "Gallery.Spinbox.h"
+#include <Util.System.hpp>
 
 namespace Gallery
 {
@@ -39,10 +40,16 @@ namespace Gallery
     {
         return CreateWindow(szWindowClass, title, style, x, y, cx, cy, parent, menu, hInstance, lpParam);
     }
+    LRESULT MainWindow::OnCreate(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+    {
+        dpi = GetDpiForWindow(hWnd);
+        return DefWindowProc(hWnd, message, wParam, lParam);
+    }
     LRESULT CALLBACK MainWindow::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
         switch (message)
         {
+            case WM_CREATE:     return OnCreate(hWnd, message, wParam, lParam);
             case WM_COMMAND:    return OnCommand(hWnd, message, wParam, lParam);
             case WM_PAINT:      return OnPaint(hWnd, message, wParam, lParam);
             case WM_DESTROY:    return OnDestroy(hWnd, message, wParam, lParam);
@@ -50,6 +57,7 @@ namespace Gallery
             case WM_NOTIFY:     return OnNotify(hWnd, message, wParam, lParam);
             case WM_SIZE:       return OnSize(hWnd, message, wParam, lParam);
             case WM_SIZING:     return OnSizing(hWnd, message, wParam, lParam);
+            case WM_DPICHANGED: return OnDpiChanged(hWnd, message, wParam, lParam);
             default:            return DefWindowProc(hWnd, message, wParam, lParam);
         }
 	}
@@ -153,6 +161,49 @@ namespace Gallery
         }
         return (INT_PTR)FALSE;
 
+    }
+
+    static RECT GetParentRelativeWindowRect(HWND hwnd)
+    {
+        RECT rect{};
+        GetWindowRect(hwnd, &rect);
+        MapWindowRect(HWND_DESKTOP, GetAncestor(hwnd, GA_PARENT), &rect);
+        return rect;
+    };
+
+    LRESULT MainWindow::OnDpiChanged(HWND hwnd, UINT message, WPARAM wparam, LPARAM lParam)
+    {
+        auto const dpiX = LOWORD(wparam);
+        auto const dpiY = HIWORD(wparam);
+        //auto& rect = *reinterpret_cast<RECT*>(lParam);
+
+
+        //Handle font
+        auto const logFont = Util::System::ParametersInfoForDpi<Util::System::Parameters::IconTitleLogFont>(dpiX);
+        auto const newFont = CreateFontIndirect(&logFont);
+
+        struct Info
+        {
+            HWND parent;
+            HFONT font;
+            WORD dpi;
+        } info{ hwnd, newFont, dpiX };
+        EnumChildWindows(hwnd, [](HWND hwnd, LPARAM lparam) -> BOOL
+        {
+            auto const& info = *reinterpret_cast<Info const*>(lparam);
+            SendMessage(hwnd, WM_SETFONT, reinterpret_cast<LPARAM>(info.font), MAKELPARAM(TRUE, 0));
+            
+            RECT rect = GetParentRelativeWindowRect(hwnd);
+            rect.left = MulDiv(rect.left, info.dpi, dpi);
+            rect.right = MulDiv(rect.right, info.dpi, dpi);
+            rect.top = MulDiv(rect.top, info.dpi, dpi);
+            rect.bottom = MulDiv(rect.bottom, info.dpi, dpi);
+            SetWindowPos(hwnd, NULL, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, SWP_NOACTIVATE | SWP_NOZORDER);
+            return TRUE;
+        }, reinterpret_cast<LPARAM>(&info));
+
+        dpi = dpiX;
+        return {};
     }
 
     std::vector<std::function<void()>> MainWindow::OnSizeHandler;

@@ -12,6 +12,7 @@
 #include "Gallery.Tabs.h"
 #include <UI.Window.hpp>
 #include "WindowStyleDetail.h"
+#include <dwmapi.h>
 
 using namespace Gallery;
 using namespace Gallery::Pages::WindowPage;
@@ -413,6 +414,20 @@ Gallery::Pages::WindowPage::Page::Page(HWND hwnd, int width, int height, int row
            gCreatedWindow.show(UI::Window::ShowType::Show);
        gCreatedWindow.update();
        OutputDebugString(L"Create window");
+
+       borderColor.onClick([](HWND)
+       {
+            auto hwnd = gCreatedWindow.getHandle();
+            COLORREF green = RGB(0, 255, 0);
+            DwmSetWindowAttribute(hwnd, DWMWA_BORDER_COLOR, &green, sizeof(green));
+       });
+
+       captionColor.onClick([](HWND)
+       {
+            auto hwnd = gCreatedWindow.getHandle();
+            COLORREF purple = RGB(255, 0, 255);
+            DwmSetWindowAttribute(hwnd, DWMWA_CAPTION_COLOR, &purple, sizeof(purple));
+       });
    });
 
    assist.onClick([&](HWND)

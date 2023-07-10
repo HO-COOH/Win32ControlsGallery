@@ -93,6 +93,9 @@
     <ClCompile Include="Gallery.Pages.ProgressBarPage.ProgressBarCheckbox.cpp">
       <Filter>Pages\ProgressBar</Filter>
     </ClCompile>
+    <ClCompile Include="Gallery.Pages.UWPPage.Page.cpp">
+      <Filter>Pages\WinUI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Gallery.Button.h">
@@ -184,6 +187,9 @@
     </ClInclude>
     <ClInclude Include="Gallery.Pages.ProgressBarPage.ProgrssBarCheckbox.h">
       <Filter>Pages\ProgressBar</Filter>
+    </ClInclude>
+    <ClInclude Include="Gallery.Pages.UWPPage.Page.h">
+      <Filter>Pages\WinUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

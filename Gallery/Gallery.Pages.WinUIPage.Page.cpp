@@ -18,16 +18,6 @@ extern HWND gHwnd;
 
 namespace Gallery::Pages::WinUIPage
 {
-    void Page::Init()
-	{
-		static bool hasInit = false;
-		if (hasInit)
-			return;
-
-		//init winrt
-		winrt::init_apartment(winrt::apartment_type::single_threaded);
-		windowsXamlManager = WindowsXamlManager::InitializeForCurrentThread();
-	}
 
     winrt::Windows::Foundation::IAsyncAction Page::ShowDialog(winrt::Windows::UI::Xaml::XamlRoot const& xamlRoot)
     {
@@ -43,7 +33,6 @@ namespace Gallery::Pages::WinUIPage
 
 	Page::Page(HWND container) : TabPageBase{container, L"WinUI Interop"}
 	{
-        Init();
         auto interop = desktopSource.as<IDesktopWindowXamlSourceNative>();
         interop->AttachToWindow(m_container);
         HWND hWndXamlIsland{};
@@ -54,7 +43,7 @@ namespace Gallery::Pages::WinUIPage
         SetWindowPos(hWndXamlIsland, 0, 0, 0, rect.right - rect.left, rect.bottom - rect.top, SWP_SHOWWINDOW);
         // Create the XAML content.
         Windows::UI::Xaml::Controls::StackPanel xamlContainer;
-        xamlContainer.Background(Windows::UI::Xaml::Media::SolidColorBrush{ Windows::UI::Colors::LightGray() });
+        //xamlContainer.Background(Windows::UI::Xaml::Media::SolidColorBrush{ Windows::UI::Colors::LightGray() });
         Windows::UI::Xaml::Controls::Button b;
         b.Content(winrt::box_value(L"Click me!"));
         b.Click([](winrt::Windows::Foundation::IInspectable sender, auto) -> winrt::Windows::Foundation::IAsyncAction {

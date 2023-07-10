@@ -8,17 +8,18 @@
 #include "Gallery.Pages.WindowPage.Page.h"
 #include "Gallery.Pages.ButtonPage.Page.h"
 #include "Gallery.Pages.ShellPage.Page.h"
-#include "Gallery.Pages.WinUIPage.Page.h"
 #include "Gallery.Pages.ProgressBarPage.Page.h"
+#include "Gallery.Pages.WinUIPage.Page.h"
+#include "Gallery.Pages.UWPPage.Page.h"
 
 
 using namespace Gallery;
 
 
 
-#pragma comment(linker,"\"/manifestdependency:type='win32' \
-name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
-processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
+//#pragma comment(linker,"\"/manifestdependency:type='win32' \
+//name='Microsoft.Windows.Common-Controls' version='6.0.0.0' \
+//processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
 HINSTANCE gHinst;
 HWND gHwnd;
@@ -38,7 +39,8 @@ BOOL InitInstance(int nCmdShow)
 	gHwnd = MainWindow::Create(szTitle, WS_OVERLAPPEDWINDOW,
 		500, 500, 2000, 1500, nullptr, nullptr, gHinst, nullptr);
 
-
+	BOOL immersiveDarkMode = TRUE;
+	DwmSetWindowAttribute(gHwnd, DWMWA_USE_IMMERSIVE_DARK_MODE, &immersiveDarkMode, sizeof(immersiveDarkMode));
 	if (!gHwnd)
 	{
 		return FALSE;
@@ -143,6 +145,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     _In_ LPWSTR    lpCmdLine,
     _In_ int       nCmdShow)
 {
+	//std::this_thread::sleep_for(std::chrono::seconds{ 10 });
     CoInitialize(nullptr);
     gHinst = hInstance;
     gNCmdShow = nCmdShow;
@@ -157,13 +160,14 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	notification.test();
 	
 	*/
-
+	winrt::init_apartment(winrt::apartment_type::single_threaded);
     Tabs tab{ gHwnd };
     tab += std::make_unique<Gallery::Pages::WindowPage::Page>(tab.getContainerWindow());
     tab += std::make_unique<Gallery::Pages::ButtonPage::Page>(tab.getContainerWindow());
 	tab += std::make_unique<Gallery::Pages::ShellPage::Page>(tab.getContainerWindow());
-	tab += std::make_unique<Gallery::Pages::WinUIPage::Page>(tab.getContainerWindow());
 	tab += std::make_unique<Gallery::Pages::ProgressBarPage::Page>(tab.getContainerWindow());
+	tab += std::make_unique<Gallery::Pages::UWPPage::Page>(tab.getContainerWindow());
+	tab += std::make_unique<Gallery::Pages::WinUIPage::Page>(tab.getContainerWindow());
 	tab.show();
 	
     UNREFERENCED_PARAMETER(hPrevInstance);
